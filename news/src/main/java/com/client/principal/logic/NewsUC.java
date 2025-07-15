@@ -8,17 +8,13 @@ import org.springframework.stereotype.Service;
 import com.client.principal.data.entities.News;
 import com.client.principal.data.repositorys.NewsRepository;
 import com.client.principal.logic.DTO.NewsDTO;
-import com.client.principal.logic.NetWork.ObtainAdmin;
 import com.client.principal.logic.data.CategoryNews;
 import com.client.principal.logic.data.NewsUI;
-import com.client.principal.logic.data.NetWork.AdminEP;
 
 @Service
 public class NewsUC {
     @Autowired
     private NewsRepository newsRepository;
-    @Autowired
-    private ObtainAdmin obtainAdmin;
 
     public NewsUI createNews(
             String title,
@@ -52,10 +48,4 @@ public class NewsUC {
                 .toList();
     }
 
-    public AdminEP getAdminByName(String name) {
-
-        AdminEP admin = obtainAdmin.getAdminByName(name);
-        return admin;
-
-    }
 }

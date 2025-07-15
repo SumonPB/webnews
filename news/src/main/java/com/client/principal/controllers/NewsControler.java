@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.client.principal.logic.NewsUC;
 import com.client.principal.logic.data.NewsUI;
-import com.client.principal.logic.data.NetWork.AdminEP;
 
 @RestController
 public class NewsControler {
@@ -31,15 +30,6 @@ public class NewsControler {
     @GetMapping("/GetAllNews")
     public List<NewsUI> getAllNews() {
         return newsUC.getAllNews();
-    }
-
-    @GetMapping("/GetAdminByName")
-    public AdminEP getAdminByName(@RequestParam("name") String name) {
-        try {
-            return newsUC.getAdminByName(name);
-        } catch (Exception e) {
-            return null;
-        }
     }
 
 }
