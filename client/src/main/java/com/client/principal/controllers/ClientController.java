@@ -54,4 +54,31 @@ public class ClientController {
         return client;
     }
 
+    @GetMapping("/updateClient")
+    public String updateClient(
+            @RequestParam("email") String email,
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "nickname", required = false) String nickname,
+            @RequestParam(value = "password", required = false) String password) {
+        try {
+            if (password != null) {
+                if (!EmailPaswordVal.isValidPassword(password)) {
+                    return "Contraseña inválida, debe tener al menos 8 caracteres alfanuméricos.";
+                }
+            }
+            if (!EmailPaswordVal.isValidEmail(email)) {
+                return "Correo inválido.";
+            }
+
+            password = cesar.encrypt(password);
+
+            clientUC.updateClient(name, nickname, email, password);
+
+            return "Cliente actualizado correctamente: " + name + " " + nickname + " " + email;
+
+        } catch (DuplicateKeyException e) {
+            return "Correo electrónico ya registrado: " + email;
+        }
+    }
+
 }

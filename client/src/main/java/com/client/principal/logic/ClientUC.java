@@ -76,4 +76,23 @@ public class ClientUC {
         return cesar.decrypt(clientBD.getPassword()).equals(password);
     }
 
+    public ClientUI updateClient(String name,
+            String nickname,
+            String email,
+            String password) {
+        Client existingClient = clientRepository.getClientByEmail(email);
+        if (existingClient == null) {
+            return null; // Client not found
+        }
+        if (name != null)
+            System.out.println(name);
+        existingClient.setName(name);
+        if (nickname != null)
+            existingClient.setNickname(nickname);
+        if (password != null)
+            existingClient.setPassword(password);
+
+        return ClientDTO.toClientUI(clientRepository.save(existingClient));
+    }
+
 }
