@@ -37,6 +37,7 @@
 	</dependencies>
 	<modules>
 		<module>client</module>
+		<module>news</module>
 	</modules>
 	<build>
 		<plugins>
