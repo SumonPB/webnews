@@ -10,12 +10,15 @@ import com.client.principal.data.entities.Client;
 import com.client.principal.data.repositorys.ClientRepository;
 import com.client.principal.logic.DAO.ClientDao;
 import com.client.principal.logic.DTO.ClientDTO;
+import com.client.principal.logic.Validations_Encriptations.Cesar;
 import com.client.principal.logic.data.ClientUI;
 
 @Service
 public class ClientUC {
     @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private Cesar cesar;
 
     public ClientUI createAdmin(String name,
             String nickname,
@@ -62,6 +65,15 @@ public class ClientUC {
             return null;
         }
         return ClientDTO.toClientUI(client);
+    }
+
+    public Boolean validateClient(String email, String password) {
+        Client clientBD = clientRepository.getClientByEmail(email);
+
+        if (clientBD == null) {
+            return false;
+        }
+        return cesar.decrypt(clientBD.getPassword()).equals(password);
     }
 
 }

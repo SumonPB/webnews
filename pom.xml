@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.2</version>
+		<version>3.3.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	<!--configuracion del padre-->
 	</parent>
@@ -35,6 +35,17 @@
 	</properties>
 	<dependencies>
 	</dependencies>
+		<dependencyManagement>
+ 		<dependencies>
+   			<dependency>
+   			    <groupId>org.springframework.cloud</groupId>
+   				<artifactId>spring-cloud-dependencies</artifactId>
+   				<version>2023.0.1</version> <!-- Usa la versión compatible con tu Spring Boot -->
+   			    <type>pom</type>
+      			<scope>import</scope>
+    		</dependency>
+ 		</dependencies>
+	</dependencyManagement>
 	<modules>
 		<module>client</module>
 		<module>news</module>
