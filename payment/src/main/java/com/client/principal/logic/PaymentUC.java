@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.client.principal.data.entities.Payment;
 import com.client.principal.data.repositorys.PaymentRepository;
+import com.client.principal.logic.DAO.BillDAO;
 import com.client.principal.logic.DTO.PaymentDTO;
 import com.client.principal.logic.Network.GetClient;
 import com.client.principal.logic.Network.GetSubscription;
@@ -35,7 +36,7 @@ public class PaymentUC {
         return getClient.getClientByName(name);
     }
 
-    public PaymentUI processPayment(String clientName, String subscriptionName, String paymentMethod) {
+    public BillDAO processPayment(String clientName, String subscriptionName, String paymentMethod) {
         UserEP client = getClient.getClientByName(clientName);
         SubscriptionEP subscription = getSubscription.GetSubscriptionByName(subscriptionName);
         if (client == null || subscription == null) {
@@ -52,9 +53,9 @@ public class PaymentUC {
                 .subscriptionId(subscription.getId())
                 .build();
 
-        Payment payme = paymentRepository.save(PaymentDTO.toPaymentEntity(paymentUI));
+        Payment payment = paymentRepository.save(PaymentDTO.toPaymentEntity(paymentUI));
 
-        return PaymentDTO.toPaymentUI(payme);
+        return PaymentDTO.createBill(payment, subscription, client);
 
     }
 

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.client.principal.logic.PaymentUC;
+import com.client.principal.logic.DAO.BillDAO;
 import com.client.principal.logic.data.PaymentUI;
 import com.client.principal.logic.data.newtwork.SubscriptionEP;
 
@@ -17,7 +18,7 @@ public class PaymentController {
     private PaymentUC paymentUC;
 
     @GetMapping("/CreatePayment")
-    public PaymentUI createPayment(
+    public BillDAO createPayment(
             @RequestParam("clientname") String clientName,
             @RequestParam("subscriptionname") String subscriptionName,
             @RequestParam("paymentmethod") String paymentMethod) {
