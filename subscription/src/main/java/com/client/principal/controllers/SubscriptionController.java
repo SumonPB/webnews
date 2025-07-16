@@ -14,21 +14,17 @@ import com.client.principal.logic.SubscriptionUC;
 public class SubscriptionController {
     @Autowired
     SubscriptionUC subscriptionUC;
-    
+
     @GetMapping("/InserSubscriptionType")
-    public Subscription InserSubscriptionType(
-            @RequestParam("type") String type) {
-
-
-        return subscriptionUC.newSubscription(type);
+    public String InserSubscriptionType() {
+        subscriptionUC.Subscriptions();
+        return "Ingresado correctamente";
     }
 
     @GetMapping("/GetAllSubscriptions")
     public List<Subscription> GetAllSubscriptions() {
 
-
         return subscriptionUC.allSubscription();
     }
-
 
 }

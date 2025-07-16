@@ -13,45 +13,43 @@ import com.client.principal.logic.data.newtwork.subscriptionTypes;
 public class SubscriptionUC {
     @Autowired
     SubscriptionRepository subscriptionRepository;
-    public Subscription newSubscription(String type) {
-        switch (type) {
-            case "INSIDER":
-            
-                        return subscriptionRepository.save(Subscription.builder()
-                        .name(subscriptionTypes.INSIDER)
-                        .Fullcat(true)
-                        .cat2(false)
-                        .contAnt(true)
-                        .descripcion("Acceso a contenido de todas las categorias y contenido anticipado")
-                        .build()); 
-                
-            case "REDACCION":
-                return subscriptionRepository.save(Subscription.builder()
-                        .name(subscriptionTypes.REDACCION)
-                        .Fullcat(false)
-                        .cat2(true)
-                        .contAnt(false)
-                        .descripcion("Acceso a contenido de dos categorias")
-                        .build());
-            case "TITULARPlus":
-                return subscriptionRepository.save(Subscription.builder()
-                        .name(subscriptionTypes.TITULARPlus)
-                        .Fullcat(true)
-                        .cat2(false)
-                        .contAnt(false)
-                        .descripcion("Acceso a contenido de todas las categorias")
-                        .build());
-            default:
-                        return subscriptionRepository.save(Subscription.builder()
-                        .name(subscriptionTypes.FREE)
-                        .Fullcat(false)
-                        .cat2(false)
-                        .contAnt(false)
-                        .descripcion("Contenido gratuito sin necesidad de pago")
-                        .build());
-        }
+
+    public void Subscriptions() {
+
+        subscriptionRepository.save(Subscription.builder()
+                .name(subscriptionTypes.INSIDER)
+                .Fullcat(true)
+                .cat2(false)
+                .contAnt(true)
+                .descripcion("Acceso a contenido de todas las categorías y contenido anticipado")
+                .build());
+
+        subscriptionRepository.save(Subscription.builder()
+                .name(subscriptionTypes.REDACCION)
+                .Fullcat(false)
+                .cat2(true)
+                .contAnt(false)
+                .descripcion("Acceso a contenido de dos categorías")
+                .build());
+
+        subscriptionRepository.save(Subscription.builder()
+                .name(subscriptionTypes.TITULARPlus)
+                .Fullcat(true)
+                .cat2(false)
+                .contAnt(false)
+                .descripcion("Acceso a contenido de todas las categorías")
+                .build());
+
+        subscriptionRepository.save(Subscription.builder()
+                .name(subscriptionTypes.FREE)
+                .Fullcat(false)
+                .cat2(false)
+                .contAnt(false)
+                .descripcion("Contenido gratuito sin necesidad de pago")
+                .build());
     }
-    public List<Subscription> allSubscription(){
+
+    public List<Subscription> allSubscription() {
         return subscriptionRepository.findAll();
     }
 }
