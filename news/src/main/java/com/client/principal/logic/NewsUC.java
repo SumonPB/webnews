@@ -3,14 +3,14 @@ package com.client.principal.logic;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
-import org.springframework.data.mongodb.core.aggregation.ComparisonOperators.Ne;
 import org.springframework.stereotype.Service;
 
 import com.client.principal.data.entities.News;
 import com.client.principal.data.repositorys.NewsRepository;
+import com.client.principal.logic.DAO.NewsDAO;
 import com.client.principal.logic.DTO.NewsDTO;
 import com.client.principal.logic.NetWork.AdminValidation;
+import com.client.principal.logic.NetWork.GetSubscription;
 import com.client.principal.logic.data.CategoryNews;
 import com.client.principal.logic.data.NewsUI;
 
@@ -22,12 +22,15 @@ public class NewsUC {
     @Autowired
     private AdminValidation adminValidation;
 
-    public NewsUI createNews(
+    @Autowired
+    private GetSubscription getSubscription;
+
+    public NewsDAO createNews(
             String title,
             String content,
             String author,
             String category,
-            String subscriptionId) {
+            String subscriptionName) {
 
         CategoryNews categoryEnum;
         try {
@@ -41,10 +44,10 @@ public class NewsUC {
                 .content(content)
                 .author(author)
                 .category(categoryEnum)
-                .subscriptionId(subscriptionId)
+                .subscriptionId(getSubscription.GetSubscriptionByName(subscriptionName).getId())
                 .build();
         newsRepository.save(news);
-        return NewsDTO.toNewsUI(news);
+        return NewsDTO.newsFormat(news, getSubscription.GetSubscriptionByName(subscriptionName).getName());
     }
 
     public List<NewsUI> getAllNews() {

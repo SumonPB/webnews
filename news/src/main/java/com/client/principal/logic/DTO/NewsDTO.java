@@ -1,7 +1,9 @@
 package com.client.principal.logic.DTO;
 
 import com.client.principal.data.entities.News;
+import com.client.principal.logic.DAO.NewsDAO;
 import com.client.principal.logic.data.NewsUI;
+import com.client.principal.logic.data.NetWork.subscriptionTypes;
 
 public class NewsDTO {
     public static NewsUI toNewsUI(News news) {
@@ -29,6 +31,16 @@ public class NewsDTO {
                 .author(newsUI.getAuthor())
                 .category(newsUI.getCategory())
                 .subscriptionId(newsUI.getSubscriptionId())
+                .build();
+    }
+
+    public static NewsDAO newsFormat(News news, subscriptionTypes subscriptionType) {
+        return NewsDAO.builder()
+                .categoryNews(news.getCategory())
+                .subscriptionType(subscriptionType)
+                .title(news.getTitle())
+                .author(news.getAuthor())
+                .content(news.getContent())
                 .build();
     }
 

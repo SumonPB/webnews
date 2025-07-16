@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.client.principal.logic.NewsUC;
+import com.client.principal.logic.DAO.NewsDAO;
 import com.client.principal.logic.data.NewsUI;
 
 @RestController
@@ -18,33 +19,32 @@ public class NewsControler {
 
     // primera forma
     @GetMapping("/valUser/InsertNew")
-    public String validarYCrearNoticia(
+    public NewsDAO validarYCrearNoticia(
             @RequestParam("email") String email,
             @RequestParam("password") String password,
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("author") String author,
             @RequestParam("category") String category,
-            @RequestParam("subscriptionId") String subscriptionId) {
+            @RequestParam("subscriptionName") String subscriptionName) {
 
         if (newsUC.validateAdmin(email, password)) {
-            newsUC.createNews(title, content, author, category, subscriptionId);
-            return "Noticia creada por el administrador: " + title;
+            return newsUC.createNews(title, content, author, category, subscriptionName);
         } else {
-            return "Usuario no autorizado para crear noticias";
+            return null;
         }
     }
 
     // segunda forma
     @GetMapping("/InsertNew")
-    public String validarYCrearNoticia2(
+    public NewsDAO validarYCrearNoticia2(
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("author") String author,
             @RequestParam("category") String category,
-            @RequestParam("subscriptionId") String subscriptionId) {
-        newsUC.createNews(title, content, author, category, subscriptionId);
-        return "Noticia creada por el administrador: " + title;
+            @RequestParam("subscriptionName") String subscriptionName) {
+
+        return newsUC.createNews(title, content, author, category, subscriptionName);
 
     }
 
