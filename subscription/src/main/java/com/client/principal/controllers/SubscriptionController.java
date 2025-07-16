@@ -27,4 +27,9 @@ public class SubscriptionController {
         return subscriptionUC.allSubscription();
     }
 
+    @GetMapping("/GetSubscriptionByName")
+    public Subscription GetSubscriptionByName(@RequestParam String name) {
+        return subscriptionUC.getSubscriptionByName(name);
+    }
+
 }
