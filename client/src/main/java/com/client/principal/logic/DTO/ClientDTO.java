@@ -14,6 +14,8 @@ public class ClientDTO {
                 .email(client.getEmail())
                 .password(client.getPassword())
                 .role(client.getRole())
+                .category(client.getCategory())
+                .subscriptionID(client.getSubscriptionID())
                 .build();
     }
 
@@ -24,14 +26,18 @@ public class ClientDTO {
                 .email(clientUI.getEmail())
                 .password(clientUI.getPassword())
                 .role(clientUI.getRole())
+                .category(clientUI.getCategory())
+                .subscriptionID(clientUI.getSubscriptionID())
                 .build();
     }
 
-    public static ClientDao toClientDao(Client Client) {
+    public static ClientDao toClientDao(Client client) {
         return ClientDao.builder()
-                .name(Client.getName())
-                .nickname(Client.getNickname())
-                .email(Client.getEmail())
+                .name(client.getName())
+                .nickname(client.getNickname())
+                .email(client.getEmail())
+                .category(client.getCategory())
+                .subscriptionID(client.getSubscriptionID())
                 .build();
     }
 

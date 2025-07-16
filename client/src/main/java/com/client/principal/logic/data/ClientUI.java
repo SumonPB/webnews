@@ -1,5 +1,8 @@
 package com.client.principal.logic.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,4 +15,6 @@ public class ClientUI {
     private String email;
     private String password;
     private Boolean role;
+    private String subscriptionID;
+    private List<CategoryNews> category;
 }

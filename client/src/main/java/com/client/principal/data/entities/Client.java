@@ -3,6 +3,12 @@ package com.client.principal.data.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.client.principal.logic.data.CategoryNews;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bson.types.ObjectId;
 import lombok.Builder;
 import lombok.Data;
@@ -20,5 +26,6 @@ public class Client {
     private String email;
     private String password;
     private Boolean role;
-
+    private String subscriptionID;
+    private List<CategoryNews> category;
 }

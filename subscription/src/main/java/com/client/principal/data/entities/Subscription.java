@@ -15,14 +15,12 @@ import lombok.Data;
 public class Subscription {
 
     @Id
-    private String id;  
+    private String id;
     @Indexed(unique = true)
-    private subscriptionTypes name; 
+    private subscriptionTypes name;
     private String descripcion;
     private Boolean contAnt;
     private Boolean cat2;
     private boolean Fullcat;
-    
-
 
 }

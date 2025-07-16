@@ -8,6 +8,6 @@ import com.client.principal.logic.data.newtwork.UserEP;
 
 @FeignClient(name = "GetClient", url = "http://localhost:9090")
 public interface GetClient {
-    @GetMapping("/GetClientByName")
-    public UserEP getClientByName(@RequestParam("name") String name);
+    @GetMapping("/GetClientByEmail")
+    public UserEP getClientByEmail(@RequestParam("email") String email);
 }

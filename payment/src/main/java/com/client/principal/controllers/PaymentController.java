@@ -19,11 +19,11 @@ public class PaymentController {
 
     @GetMapping("/CreatePayment")
     public BillDAO createPayment(
-            @RequestParam("clientname") String clientName,
+            @RequestParam("clientEmail") String clientEmail,
             @RequestParam("subscriptionname") String subscriptionName,
             @RequestParam("paymentmethod") String paymentMethod) {
 
-        return paymentUC.processPayment(clientName, subscriptionName, paymentMethod);
+        return paymentUC.processPayment(clientEmail, subscriptionName, paymentMethod);
     }
 
     @GetMapping("/GetSubscriptionDetails")

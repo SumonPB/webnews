@@ -32,12 +32,12 @@ public class PaymentUC {
         return getSubscription.GetSubscriptionByName(name);
     }
 
-    public UserEP getClientDetails(String name) {
-        return getClient.getClientByName(name);
+    public UserEP getClientDetails(String clientEmail) {
+        return getClient.getClientByEmail(clientEmail);
     }
 
-    public BillDAO processPayment(String clientName, String subscriptionName, String paymentMethod) {
-        UserEP client = getClient.getClientByName(clientName);
+    public BillDAO processPayment(String clientEmail, String subscriptionName, String paymentMethod) {
+        UserEP client = getClient.getClientByEmail(clientEmail);
         SubscriptionEP subscription = getSubscription.GetSubscriptionByName(subscriptionName);
         if (client == null || subscription == null) {
             return null;

@@ -1,7 +1,9 @@
 package com.client.principal.logic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,8 +12,12 @@ import com.client.principal.data.entities.Client;
 import com.client.principal.data.repositorys.ClientRepository;
 import com.client.principal.logic.DAO.ClientDao;
 import com.client.principal.logic.DTO.ClientDTO;
+import com.client.principal.logic.NETWORK.GetSubscription;
 import com.client.principal.logic.Validations_Encriptations.Cesar;
+import com.client.principal.logic.data.CategoryNews;
 import com.client.principal.logic.data.ClientUI;
+import com.client.principal.logic.data.network.SubscriptionEP;
+import com.client.principal.logic.data.network.subscriptionTypes;
 
 @Service
 public class ClientUC {
@@ -19,17 +25,21 @@ public class ClientUC {
     private ClientRepository clientRepository;
     @Autowired
     private Cesar cesar;
+    @Autowired
+    private GetSubscription getSubscription;
 
     public ClientUI createAdmin(String name,
             String nickname,
             String email,
             String password) {
+
         ClientUI client = ClientUI.builder()
                 .name(name)
                 .nickname(nickname)
                 .email(email)
                 .password(password)
-                .role(true) // true for admin role
+                .role(true)
+                .subscriptionID(getSubscription.GetSubscriptionByName("INSIDER").getId())
                 .build();
         clientRepository.save(ClientDTO.toClient(client));
         return client;
@@ -45,6 +55,7 @@ public class ClientUC {
                 .email(email)
                 .password(password)
                 .role(false)
+                .subscriptionID(getSubscription.GetSubscriptionByName("FREE").getId())
                 .build();
 
         clientRepository.save(ClientDTO.toClient(client));
@@ -57,6 +68,14 @@ public class ClientUC {
             clients.add(ClientDTO.toClientDao(client));
         });
         return clients;
+    }
+
+    public ClientUI findClientByEmail(String email) {
+        Client client = clientRepository.getClientByEmail(email);
+        if (client == null) {
+            return null;
+        }
+        return ClientDTO.toClientUI(client);
     }
 
     public ClientUI findClientByName(String name) {
@@ -93,6 +112,30 @@ public class ClientUC {
             existingClient.setPassword(password);
 
         return ClientDTO.toClientUI(clientRepository.save(existingClient));
+    }
+
+    public ClientDao agregarCategorias(String email, List<CategoryNews> categoryNews) {
+        Client existingClient = clientRepository.getClientByEmail(email);
+
+        SubscriptionEP subscription = getSubscription.findSubscriptionById(existingClient.getSubscriptionID());
+
+        if (subscription.getName().equals(subscriptionTypes.FREE)) {
+            return ClientDTO.toClientDao(existingClient);
+        } else if (subscription.getName().equals(subscriptionTypes.TITULARPlus)) {
+            if (categoryNews.size() >= 2) {
+                existingClient.setCategory(Arrays.asList(categoryNews.get(0), categoryNews.get(1)));
+            } else {
+                throw new IllegalArgumentException("Se requieren al menos dos categorías para TITULARPlus.");
+            }
+
+            return ClientDTO.toClientDao(clientRepository.save(existingClient));
+        } else if (subscription.getName().equals(subscriptionTypes.REDACCION)
+                || subscription.getName().equals(subscriptionTypes.INSIDER)) {
+            existingClient.setCategory(categoryNews);
+            return ClientDTO.toClientDao(clientRepository.save(existingClient));
+        }
+
+        throw new IllegalStateException("Tipo de suscripción desconocido: " + subscription.getName());
     }
 
 }

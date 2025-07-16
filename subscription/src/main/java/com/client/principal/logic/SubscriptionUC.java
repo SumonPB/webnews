@@ -1,6 +1,7 @@
 package com.client.principal.logic;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import com.client.principal.logic.data.newtwork.subscriptionTypes;
 @Service
 public class SubscriptionUC {
         @Autowired
-        SubscriptionRepository subscriptionRepository;
+        private SubscriptionRepository subscriptionRepository;
 
         public void Subscriptions() {
 
@@ -55,6 +56,10 @@ public class SubscriptionUC {
 
         public Subscription getSubscriptionByName(String name) {
                 return subscriptionRepository.getSubscriptionByName(name);
+        }
+
+        public Subscription geSubscriptionById(String id) {
+                return subscriptionRepository.findById(id).orElse(null);
         }
 
 }

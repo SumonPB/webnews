@@ -1,6 +1,9 @@
 package com.client.principal.controllers;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,9 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.client.principal.logic.ClientUC;
 import com.client.principal.logic.DAO.ClientDao;
+import com.client.principal.logic.NETWORK.GetSubscription;
 import com.client.principal.logic.Validations_Encriptations.Cesar;
 import com.client.principal.logic.Validations_Encriptations.EmailPaswordVal;
+import com.client.principal.logic.data.CategoryNews;
 import com.client.principal.logic.data.ClientUI;
+import com.client.principal.logic.data.network.SubscriptionEP;
+import com.client.principal.logic.data.network.subscriptionTypes;
+
 import org.springframework.dao.DuplicateKeyException;
 
 @RestController
@@ -19,6 +27,8 @@ public class ClientController {
     private ClientUC clientUC;
     @Autowired
     private Cesar cesar;
+    @Autowired
+    private GetSubscription getSubscription;
 
     @GetMapping("/InsertClient")
     public String insertCustomer(
@@ -79,6 +89,19 @@ public class ClientController {
         } catch (DuplicateKeyException e) {
             return "Correo electrónico ya registrado: " + email;
         }
+    }
+
+    @GetMapping("/GetClientByEmail")
+    public ClientUI GetClientByEmail(@RequestParam("email") String email) {
+        return clientUC.findClientByEmail(email);
+    }
+
+    @GetMapping("/choseCategories")
+    public ClientDao choseCategories(
+            @RequestParam("email") String email,
+            @RequestParam("categories") List<CategoryNews> categoryNews) {
+
+        return clientUC.agregarCategorias(email, categoryNews);
     }
 
 }

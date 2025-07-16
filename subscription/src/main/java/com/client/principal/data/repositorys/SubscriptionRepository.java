@@ -8,4 +8,7 @@ import com.client.principal.data.entities.Subscription;
 public interface SubscriptionRepository extends MongoRepository<Subscription, String> {
     @Query("{ 'name' : ?0 }")
     public Subscription getSubscriptionByName(String name);
+
+    @Query("{ '_id' : ?0 }")
+    public Subscription getSubscriptionById(String id);
 }
