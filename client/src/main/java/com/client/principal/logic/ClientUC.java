@@ -3,7 +3,6 @@ package com.client.principal.logic;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +11,12 @@ import com.client.principal.data.entities.Client;
 import com.client.principal.data.repositorys.ClientRepository;
 import com.client.principal.logic.DAO.ClientDao;
 import com.client.principal.logic.DTO.ClientDTO;
+import com.client.principal.logic.NETWORK.CreateBill;
 import com.client.principal.logic.NETWORK.GetSubscription;
 import com.client.principal.logic.Validations_Encriptations.Cesar;
 import com.client.principal.logic.data.CategoryNews;
 import com.client.principal.logic.data.ClientUI;
+import com.client.principal.logic.data.network.PaymentEP;
 import com.client.principal.logic.data.network.SubscriptionEP;
 import com.client.principal.logic.data.network.subscriptionTypes;
 
@@ -27,6 +28,8 @@ public class ClientUC {
     private Cesar cesar;
     @Autowired
     private GetSubscription getSubscription;
+    @Autowired
+    private CreateBill createBill;
 
     public ClientUI createAdmin(String name,
             String nickname,
@@ -115,6 +118,7 @@ public class ClientUC {
     }
 
     public ClientDao agregarCategorias(String email, List<CategoryNews> categoryNews) {
+
         Client existingClient = clientRepository.getClientByEmail(email);
 
         SubscriptionEP subscription = getSubscription.findSubscriptionById(existingClient.getSubscriptionID());
@@ -138,4 +142,15 @@ public class ClientUC {
         throw new IllegalStateException("Tipo de suscripción desconocido: " + subscription.getName());
     }
 
+    public ClientDao buySubscription(String email, String subscriptionName, String payMethod) {
+        Client existingClient = clientRepository.getClientByEmail(email);
+        PaymentEP newBill = createBill.createPayment(email, subscriptionName, payMethod);
+        if (existingClient.getBillsId() == null) {
+            existingClient.setBillsId(new ArrayList<>());
+        }
+        existingClient.getBillsId().add(newBill.getId());
+        existingClient.setSubscriptionID(newBill.getSubscriptionId());
+        return ClientDTO.toClientDao(clientRepository.save(existingClient));
+
+    }
 }

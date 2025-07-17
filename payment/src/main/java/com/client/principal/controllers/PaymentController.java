@@ -18,7 +18,7 @@ public class PaymentController {
     private PaymentUC paymentUC;
 
     @GetMapping("/CreatePayment")
-    public BillDAO createPayment(
+    public PaymentUI createPayment(
             @RequestParam("clientEmail") String clientEmail,
             @RequestParam("subscriptionname") String subscriptionName,
             @RequestParam("paymentmethod") String paymentMethod) {

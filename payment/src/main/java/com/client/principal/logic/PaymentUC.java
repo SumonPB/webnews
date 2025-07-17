@@ -36,7 +36,7 @@ public class PaymentUC {
         return getClient.getClientByEmail(clientEmail);
     }
 
-    public BillDAO processPayment(String clientEmail, String subscriptionName, String paymentMethod) {
+    public PaymentUI processPayment(String clientEmail, String subscriptionName, String paymentMethod) {
         UserEP client = getClient.getClientByEmail(clientEmail);
         SubscriptionEP subscription = getSubscription.GetSubscriptionByName(subscriptionName);
         if (client == null || subscription == null) {
@@ -55,7 +55,7 @@ public class PaymentUC {
 
         Payment payment = paymentRepository.save(PaymentDTO.toPaymentEntity(paymentUI));
 
-        return PaymentDTO.createBill(payment, subscription, client);
+        return PaymentDTO.toPaymentUI(payment);
 
     }
 

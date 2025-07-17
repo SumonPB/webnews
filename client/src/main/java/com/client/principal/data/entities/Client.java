@@ -5,8 +5,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.client.principal.logic.data.CategoryNews;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -28,4 +26,5 @@ public class Client {
     private Boolean role;
     private String subscriptionID;
     private List<CategoryNews> category;
+    private List<String> billsId;
 }

@@ -104,4 +104,13 @@ public class ClientController {
         return clientUC.agregarCategorias(email, categoryNews);
     }
 
+    @GetMapping("/buySubscription")
+    public ClientDao buySubscription(
+            @RequestParam("email") String email,
+            @RequestParam("subscriptionName") String subscriptionName,
+            @RequestParam("methodPay") String methodPay) {
+
+        return clientUC.buySubscription(email, subscriptionName, methodPay);
+    }
+
 }

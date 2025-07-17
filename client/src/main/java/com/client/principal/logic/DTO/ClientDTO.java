@@ -16,6 +16,7 @@ public class ClientDTO {
                 .role(client.getRole())
                 .category(client.getCategory())
                 .subscriptionID(client.getSubscriptionID())
+                .billsId(client.getBillsId())
                 .build();
     }
 
@@ -28,6 +29,7 @@ public class ClientDTO {
                 .role(clientUI.getRole())
                 .category(clientUI.getCategory())
                 .subscriptionID(clientUI.getSubscriptionID())
+                .billsId(clientUI.getBillsId())
                 .build();
     }
 
@@ -38,6 +40,7 @@ public class ClientDTO {
                 .email(client.getEmail())
                 .category(client.getCategory())
                 .subscriptionID(client.getSubscriptionID())
+                .billsId(client.getBillsId())
                 .build();
     }
 

@@ -16,4 +16,5 @@ public class ClientDao {
     private String email;
     private String subscriptionID;
     private List<CategoryNews> category;
+    private List<String> billsId;
 }
