@@ -11,5 +11,5 @@ public class SubscriptionEP {
     private String descripcion;
     private Boolean contAnt;
     private Boolean cat2;
-    private boolean Fullcat;
+    private Boolean Fullcat;
 }

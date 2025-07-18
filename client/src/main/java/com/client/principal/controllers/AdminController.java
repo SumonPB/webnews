@@ -54,4 +54,33 @@ public class AdminController {
         }
 
     }
+
+    @GetMapping("/updateCli")
+    public String updateCli(
+            @RequestParam("email") String email,
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "nickname", required = false) String nickname,
+            @RequestParam(value = "password", required = false) String password,
+            @RequestParam(value = "subscriptionName", required = false) String subscriptionName) {
+        try {
+            if (password != null) {
+                if (!EmailPaswordVal.isValidPassword(password)) {
+                    return "Contraseña inválida, debe tener al menos 8 caracteres alfanuméricos.";
+                }
+            }
+            if (!EmailPaswordVal.isValidEmail(email)) {
+                return "Correo inválido.";
+            }
+
+            password = cesar.encrypt(password);
+
+            clientUC.updateCli(name, nickname, email, password, subscriptionName);
+
+            return "Cliente actualizado correctamente: " + name + " " + nickname + " " + email;
+
+        } catch (DuplicateKeyException e) {
+            return "Correo electrónico ya registrado: " + email;
+        }
+    }
+
 }

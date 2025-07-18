@@ -26,17 +26,17 @@ public class SubscriptionUC {
                                 .build());
 
                 subscriptionRepository.save(Subscription.builder()
-                                .name(subscriptionTypes.REDACCION)
-                                .Fullcat(false)
-                                .cat2(true)
+                                .name(subscriptionTypes.REDACCIONPlus)
+                                .Fullcat(true)
+                                .cat2(false)
                                 .contAnt(false)
                                 .descripcion("Acceso a contenido de dos categorías")
                                 .build());
 
                 subscriptionRepository.save(Subscription.builder()
-                                .name(subscriptionTypes.TITULARPlus)
-                                .Fullcat(true)
-                                .cat2(false)
+                                .name(subscriptionTypes.TITULAR)
+                                .Fullcat(false)
+                                .cat2(true)
                                 .contAnt(false)
                                 .descripcion("Acceso a contenido de todas las categorías")
                                 .build());
@@ -62,4 +62,7 @@ public class SubscriptionUC {
                 return subscriptionRepository.findById(id).orElse(null);
         }
 
+        public List<Subscription> findByName(List<subscriptionTypes> names) {
+                return subscriptionRepository.findByNameIn(names);
+        }
 }

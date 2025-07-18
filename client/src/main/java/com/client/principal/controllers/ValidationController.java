@@ -20,4 +20,12 @@ public class ValidationController {
         return clientUC.validateClient(email, password);
     }
 
+    @GetMapping("/validateAdmin")
+    public Boolean validationAdmin(
+            @RequestParam("email") String email,
+            @RequestParam("password") String password) {
+
+        return clientUC.validateAdmin(email, password);
+    }
+
 }

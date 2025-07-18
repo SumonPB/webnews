@@ -1,6 +1,8 @@
 package com.client.principal.logic;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,8 +13,11 @@ import com.client.principal.logic.DAO.NewsDAO;
 import com.client.principal.logic.DTO.NewsDTO;
 import com.client.principal.logic.NetWork.AdminValidation;
 import com.client.principal.logic.NetWork.GetSubscription;
+import com.client.principal.logic.Validations_Encriptations.AllowedTypes;
 import com.client.principal.logic.data.CategoryNews;
 import com.client.principal.logic.data.NewsUI;
+import com.client.principal.logic.data.NetWork.SubscriptionEP;
+import com.client.principal.logic.data.NetWork.subscriptionTypes;
 
 @Service
 public class NewsUC {
@@ -105,4 +110,31 @@ public class NewsUC {
 
         return adminValidation.getAdminByName(email, password);
     }
+
+    public List<NewsUI> obtenerNoticiasPermitidas(String nameSub, List<CategoryNews> categoriasFiltradas) {
+
+        SubscriptionEP subscription = getSubscription.GetSubscriptionByName(nameSub);
+
+        List<subscriptionTypes> tiposPermitidos = AllowedTypes.tiposPermitidos(subscription);
+
+        List<SubscriptionEP> subsPermitidas = getSubscription.findByName(tiposPermitidos);
+
+        List<String> idsSubsPermitidas = subsPermitidas.stream()
+                .map(SubscriptionEP::getId)
+                .collect(Collectors.toList());
+
+        List<News> newsList;
+
+        if (categoriasFiltradas == null || categoriasFiltradas.isEmpty()) {
+
+            newsList = newsRepository.findBySubscriptionIdIn(idsSubsPermitidas);
+        } else {
+
+            newsList = newsRepository.findBySubscriptionIdInAndCategoryIn(idsSubsPermitidas, categoriasFiltradas);
+        }
+        return newsList.stream()
+                .map(NewsDTO::toNewsUI)
+                .collect(Collectors.toList());
+    }
+
 }

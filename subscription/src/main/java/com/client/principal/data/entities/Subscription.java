@@ -21,6 +21,6 @@ public class Subscription {
     private String descripcion;
     private Boolean contAnt;
     private Boolean cat2;
-    private boolean Fullcat;
+    private Boolean Fullcat;
 
 }

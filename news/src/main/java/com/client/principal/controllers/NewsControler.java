@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.client.principal.logic.NewsUC;
 import com.client.principal.logic.DAO.NewsDAO;
+import com.client.principal.logic.data.CategoryNews;
 import com.client.principal.logic.data.NewsUI;
+import com.client.principal.logic.data.NetWork.SubscriptionEP;
+import com.client.principal.logic.data.NetWork.subscriptionTypes;
 
 @RestController
 public class NewsControler {
@@ -73,6 +76,14 @@ public class NewsControler {
             return newsUC.updateNews(id, title, content, author, category, subscriptionId);
         }
 
+    }
+
+    @GetMapping("/GetNewsByClient")
+    public List<NewsUI> GetNewsByClient(
+            @RequestParam("nameSub") String nameSub,
+            @RequestParam(value = "categoriasFiltradas", required = false) List<CategoryNews> categoriasFiltradas) {
+
+        return newsUC.obtenerNoticiasPermitidas(nameSub, categoriasFiltradas);
     }
 
 }

@@ -13,9 +13,11 @@ import com.client.principal.logic.DAO.ClientDao;
 import com.client.principal.logic.DTO.ClientDTO;
 import com.client.principal.logic.NETWORK.CreateBill;
 import com.client.principal.logic.NETWORK.GetSubscription;
+import com.client.principal.logic.NETWORK.ViewNews;
 import com.client.principal.logic.Validations_Encriptations.Cesar;
 import com.client.principal.logic.data.CategoryNews;
 import com.client.principal.logic.data.ClientUI;
+import com.client.principal.logic.data.network.NewsEP;
 import com.client.principal.logic.data.network.PaymentEP;
 import com.client.principal.logic.data.network.SubscriptionEP;
 import com.client.principal.logic.data.network.subscriptionTypes;
@@ -30,6 +32,8 @@ public class ClientUC {
     private GetSubscription getSubscription;
     @Autowired
     private CreateBill createBill;
+    @Autowired
+    private ViewNews viewNews;
 
     public ClientUI createAdmin(String name,
             String nickname,
@@ -98,6 +102,18 @@ public class ClientUC {
         return cesar.decrypt(clientBD.getPassword()).equals(password);
     }
 
+    public Boolean validateAdmin(String email, String password) {
+        Client clientBD = clientRepository.getClientByEmail(email);
+
+        if (clientBD == null) {
+            return false;
+        }
+        if (clientBD.getRole()) {
+            return false;
+        }
+        return cesar.decrypt(clientBD.getPassword()).equals(password);
+    }
+
     public ClientUI updateClient(String name,
             String nickname,
             String email,
@@ -125,7 +141,7 @@ public class ClientUC {
 
         if (subscription.getName().equals(subscriptionTypes.FREE)) {
             return ClientDTO.toClientDao(existingClient);
-        } else if (subscription.getName().equals(subscriptionTypes.TITULARPlus)) {
+        } else if (subscription.getName().equals(subscriptionTypes.TITULAR)) {
             if (categoryNews.size() >= 2) {
                 existingClient.setCategory(Arrays.asList(categoryNews.get(0), categoryNews.get(1)));
             } else {
@@ -133,7 +149,7 @@ public class ClientUC {
             }
 
             return ClientDTO.toClientDao(clientRepository.save(existingClient));
-        } else if (subscription.getName().equals(subscriptionTypes.REDACCION)
+        } else if (subscription.getName().equals(subscriptionTypes.REDACCIONPlus)
                 || subscription.getName().equals(subscriptionTypes.INSIDER)) {
             existingClient.setCategory(categoryNews);
             return ClientDTO.toClientDao(clientRepository.save(existingClient));
@@ -152,5 +168,32 @@ public class ClientUC {
         existingClient.setSubscriptionID(newBill.getSubscriptionId());
         return ClientDTO.toClientDao(clientRepository.save(existingClient));
 
+    }
+
+    public ClientUI updateCli(String name,
+            String nickname,
+            String email,
+            String password,
+            String subscriptionName) {
+        Client existingClient = clientRepository.getClientByEmail(email);
+        if (existingClient == null) {
+            return null; // Client not found
+        }
+        if (name != null)
+            System.out.println(name);
+        existingClient.setName(name);
+        if (nickname != null)
+            existingClient.setNickname(nickname);
+        if (password != null)
+            existingClient.setPassword(password);
+        if (subscriptionName != null)
+            existingClient.setSubscriptionID(getSubscription.GetSubscriptionByName(subscriptionName).getId());
+        return ClientDTO.toClientUI(clientRepository.save(existingClient));
+    }
+
+    public List<NewsEP> seeNews(ClientUI clientUI) {
+        SubscriptionEP ns = getSubscription.findSubscriptionById(clientUI.getSubscriptionID());
+
+        return viewNews.GetNewsByClient(ns.getName().toString(), clientUI.getCategory());
     }
 }

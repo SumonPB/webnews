@@ -45,8 +45,8 @@ public class PaymentUC {
         PaymentUI paymentUI = PaymentUI.builder()
                 .paymentMethod(paymentMethod)
                 .amount(subscription.getName().equals(subscriptionTypes.FREE) ? 0.0
-                        : subscription.getName().equals(subscriptionTypes.TITULARPlus) ? 1.99
-                                : subscription.getName().equals(subscriptionTypes.REDACCION) ? 3.99 : 5.99)
+                        : subscription.getName().equals(subscriptionTypes.TITULAR) ? 1.99
+                                : subscription.getName().equals(subscriptionTypes.REDACCIONPlus) ? 3.99 : 5.99)
                 .userId(client.getId())
                 .startSubscription(LocalDateTime.now())
                 .endSubscription(LocalDateTime.now().plusDays(30))

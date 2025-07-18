@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.client.principal.data.entities.Subscription;
 import com.client.principal.logic.SubscriptionUC;
+import com.client.principal.logic.data.newtwork.subscriptionTypes;
 
 @RestController
 public class SubscriptionController {
@@ -44,6 +45,11 @@ public class SubscriptionController {
             return subscription;
         }
         return subscription;
+    }
+
+    @GetMapping("/findByName")
+    public List<Subscription> findByName(@RequestParam("userSub") List<subscriptionTypes> userSub) {
+        return subscriptionUC.findByName(userSub);
     }
 
 }
