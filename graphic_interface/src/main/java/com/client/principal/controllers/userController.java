@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.client.principal.logic.Network.UserUI;
 import com.client.principal.logic.data.newtwork.CategoryNews;
 import com.client.principal.logic.data.newtwork.ClientDAOEP;
+import com.client.principal.logic.data.newtwork.NewsEP;
 import com.client.principal.logic.data.newtwork.UserEP;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class userController {
@@ -63,6 +66,20 @@ public class userController {
         return "register"; // Thymeleaf buscará "classpath:/templates/register.html"
     }
 
+    @GetMapping("/user")
+    public String userPage(HttpSession session, Model model) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/login";
+        }
+
+        List<NewsEP> userNews = userUI.seeNewsOnLog(email);
+        model.addAttribute("news", userNews);
+        model.addAttribute("email", email);
+
+        return "user";
+    }
 }
 // listar usuarios con subscripcion activa
 //

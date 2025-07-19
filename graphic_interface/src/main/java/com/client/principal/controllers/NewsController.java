@@ -52,7 +52,7 @@ public class NewsController {
     public String seeNewsNoLog(Model model) {
         List<NewsEP> newsList = userUI.seeNewsNoLog();
         model.addAttribute("news", newsList);
-        return "news_nolog"; // Vista que vamos a crear
+        return "news_nolog";
     }
 
     @GetMapping("/seeNewsOnLog")

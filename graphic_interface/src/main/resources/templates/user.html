@@ -2,8 +2,35 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Usuario</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .buttons { margin-bottom: 20px; }
+        .news-item { border: 1px solid #ccc; padding: 10px; margin-bottom: 15px; }
+        .news-title { font-size: 18px; font-weight: bold; }
+        .news-author, .news-category { font-style: italic; color: #555; }
+    </style>
 </head>
 <body>
-    <h2>Bienvenido Usuario</h2>
+
+    <h2 th:text="'Bienvenido ' + ${email}">Bienvenido Usuario</h2>
+
+    <div class="buttons">
+        <a href="/configureProfile"><button>Configurar Perfil</button></a>
+        <a href="/buySubscription"><button>Comprar Subscripción</button></a>
+        <a href="/chooseCategories"><button>Escoger Categorías</button></a>
+        <a href="/logout"><button>Salir</button></a>
+    </div>
+
+    <h3>Noticias Recomendadas</h3>
+
+    <div th:each="news : ${news}">
+        <div class="news-item">
+            <div class="news-title" th:text="${news.title}">Título</div>
+            <div class="news-author">Autor: <span th:text="${news.author}">Autor</span></div>
+            <div class="news-category">Categoría: <span th:text="${news.category}">Categoría</span></div>
+            <p th:text="${news.content}">Contenido</p>
+        </div>
+    </div>
+
 </body>
 </html>
