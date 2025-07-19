@@ -3,18 +3,24 @@ package com.client.principal.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.client.principal.logic.Network.NewsUI;
+import com.client.principal.logic.Network.UserUI;
 import com.client.principal.logic.data.newtwork.NewsDAOEP;
 import com.client.principal.logic.data.newtwork.NewsEP;
 
-@RestController
+import jakarta.servlet.http.HttpSession;
+
+@Controller
 public class NewsController {
     @Autowired
     NewsUI newsUI;
+    @Autowired
+    UserUI userUI;
 
     @GetMapping("/InsertNew")
     public NewsDAOEP validarYCrearNoticia2(
@@ -38,7 +44,21 @@ public class NewsController {
     }
 
     @GetMapping("/GetAllNews")
-    public List<NewsUI> getAllNews() {
+    public List<NewsEP> getAllNews() {
         return newsUI.getAllNews();
     }
+
+    @GetMapping("/seeNewsNoLog")
+    public String seeNewsNoLog(Model model) {
+        List<NewsEP> newsList = userUI.seeNewsNoLog();
+        model.addAttribute("news", newsList);
+        return "news_nolog"; // Vista que vamos a crear
+    }
+
+    @GetMapping("/seeNewsOnLog")
+    public List<NewsEP> seeNewsOnLog(HttpSession session) {
+        String email = (String) session.getAttribute("email");
+        return userUI.seeNewsOnLog(email);
+    }
+
 }

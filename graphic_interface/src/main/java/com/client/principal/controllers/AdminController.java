@@ -25,14 +25,6 @@ public class AdminController {
         return adminUI.updateCli(email, name, nickname, password, subscriptionName);
     }
 
-    @GetMapping("/validateAdmin")
-    public Boolean validationAdmin(
-            @RequestParam("email") String email,
-            @RequestParam("password") String password) {
-
-        return adminUI.validationAdmin(email, password);
-    }
-
     @GetMapping("/GetAllClients")
     public List<ClientDAOEP> getAllCustomers() {
         return adminUI.getAllCustomers();

@@ -36,4 +36,10 @@ public class PaymentController {
         return paymentUC.getAllPayments();
     }
 
+    @GetMapping("GetBillById")
+    public PaymentUI getBillById(
+            @RequestParam("billId") String billId) {
+        return paymentUC.getBillById(billId);
+    }
+
 }

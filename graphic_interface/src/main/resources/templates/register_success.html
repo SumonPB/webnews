@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Registro Exitoso</title></head>
+<body>
+    <h2 th:if="${success}">¡Registro exitoso!</h2>
+    <h2 th:unless="${success}">Hubo un problema con el registro.</h2>
+    <a href="/login"><button>Ir al Login</button></a>
+</body>
+</html>

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.client.principal.logic.data.CategoryNews;
 import com.client.principal.logic.data.network.NewsEP;
 
-@FeignClient(name = "GetSubscription", url = "http://localhost:9091")
+@FeignClient(name = "ViewNews", url = "http://localhost:9091")
 public interface ViewNews {
     @GetMapping("/GetNewsByClient")
     public List<NewsEP> GetNewsByClient(

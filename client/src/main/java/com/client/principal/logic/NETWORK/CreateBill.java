@@ -13,4 +13,8 @@ public interface CreateBill {
             @RequestParam("clientEmail") String clientEmail,
             @RequestParam("subscriptionname") String subscriptionName,
             @RequestParam("paymentmethod") String paymentMethod);
+
+    @GetMapping("GetBillById")
+    public PaymentEP getBillById(
+            @RequestParam("billId") String billId);
 }

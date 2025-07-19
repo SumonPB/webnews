@@ -16,6 +16,7 @@ import com.client.principal.logic.Validations_Encriptations.Cesar;
 import com.client.principal.logic.Validations_Encriptations.EmailPaswordVal;
 import com.client.principal.logic.data.CategoryNews;
 import com.client.principal.logic.data.ClientUI;
+import com.client.principal.logic.data.network.NewsEP;
 import com.client.principal.logic.data.network.SubscriptionEP;
 import com.client.principal.logic.data.network.subscriptionTypes;
 
@@ -111,6 +112,17 @@ public class ClientController {
             @RequestParam("methodPay") String methodPay) {
 
         return clientUC.buySubscription(email, subscriptionName, methodPay);
+    }
+
+    @GetMapping("/seeNewsNoLog")
+    public List<NewsEP> seeNewsNoLog() {
+        return clientUC.seeNews("");
+    }
+
+    @GetMapping("/seeNewsOnLog")
+    public List<NewsEP> seeNewsOnLog(@RequestParam("email") String email) {
+
+        return clientUC.seeNews(email);
     }
 
 }

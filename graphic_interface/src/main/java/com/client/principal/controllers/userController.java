@@ -3,6 +3,8 @@ package com.client.principal.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,18 +14,10 @@ import com.client.principal.logic.data.newtwork.CategoryNews;
 import com.client.principal.logic.data.newtwork.ClientDAOEP;
 import com.client.principal.logic.data.newtwork.UserEP;
 
-@RestController
+@Controller
 public class userController {
     @Autowired
     UserUI userUI;
-
-    @GetMapping("/validate")
-    public boolean validate(
-            @RequestParam("email") String email,
-            @RequestParam("password") String password) {
-
-        return userUI.validation(email, password);
-    }
 
     @GetMapping("/buySubscription")
     public UserEP buySubscription(
@@ -56,8 +50,17 @@ public class userController {
             @RequestParam("name") String name,
             @RequestParam("nickname") String nickname,
             @RequestParam("email") String email,
-            @RequestParam("password") String password) {
-        return userUI.insertCustomer(name, nickname, email, password).toString();
+            @RequestParam("password") String password,
+            Model model) {
+
+        userUI.insertCustomer(name, nickname, email, password);
+        model.addAttribute("success", true);
+        return "register_success";
+    }
+
+    @GetMapping("/register")
+    public String showRegisterForm() {
+        return "register"; // Thymeleaf buscará "classpath:/templates/register.html"
     }
 
 }

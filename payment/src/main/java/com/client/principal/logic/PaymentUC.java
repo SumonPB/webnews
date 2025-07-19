@@ -66,4 +66,9 @@ public class PaymentUC {
                 .collect(Collectors.toList());
     }
 
+    public PaymentUI getBillById(String id) {
+
+        return PaymentDTO.toPaymentUI(paymentRepository.getBillById(id));
+    }
+
 }

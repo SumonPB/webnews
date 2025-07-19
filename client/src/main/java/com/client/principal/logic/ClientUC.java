@@ -1,5 +1,6 @@
 package com.client.principal.logic;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -98,6 +99,14 @@ public class ClientUC {
 
         if (clientBD == null) {
             return false;
+        } else {
+            if (clientBD.getBillsId() != null) {
+                PaymentEP currentbill = createBill.getBillById(clientBD.getBillsId().getLast());
+                LocalDateTime now = LocalDateTime.now();
+                if (currentbill.getEndSubscription().isAfter(now)) {
+                    clientBD.setSubscriptionID(getSubscription.GetSubscriptionByName("FREE").getId());
+                }
+            }
         }
         return cesar.decrypt(clientBD.getPassword()).equals(password);
     }
@@ -108,7 +117,7 @@ public class ClientUC {
         if (clientBD == null) {
             return false;
         }
-        if (clientBD.getRole()) {
+        if (!clientBD.getRole()) {
             return false;
         }
         return cesar.decrypt(clientBD.getPassword()).equals(password);
@@ -191,9 +200,14 @@ public class ClientUC {
         return ClientDTO.toClientUI(clientRepository.save(existingClient));
     }
 
-    public List<NewsEP> seeNews(ClientUI clientUI) {
-        SubscriptionEP ns = getSubscription.findSubscriptionById(clientUI.getSubscriptionID());
+    public List<NewsEP> seeNews(String email) {
+        if (!email.isEmpty()) {
+            ClientUI client = findClientByEmail(email);
+            SubscriptionEP ns = getSubscription.findSubscriptionById(client.getSubscriptionID());
+            return viewNews.GetNewsByClient(ns.getName().toString(), client.getCategory());
+        } else {
+            return viewNews.GetNewsByClient("FREE", null);
+        }
 
-        return viewNews.GetNewsByClient(ns.getName().toString(), clientUI.getCategory());
     }
 }
