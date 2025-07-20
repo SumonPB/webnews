@@ -13,6 +13,7 @@ import com.client.principal.data.repositorys.ClientRepository;
 import com.client.principal.logic.DAO.ClientDao;
 import com.client.principal.logic.DTO.ClientDTO;
 import com.client.principal.logic.NETWORK.CreateBill;
+import com.client.principal.logic.NETWORK.EmailService;
 import com.client.principal.logic.NETWORK.GetSubscription;
 import com.client.principal.logic.NETWORK.ViewNews;
 import com.client.principal.logic.Validations_Encriptations.Cesar;
@@ -35,6 +36,8 @@ public class ClientUC {
     private CreateBill createBill;
     @Autowired
     private ViewNews viewNews;
+    @Autowired
+    private EmailService emailService;
 
     public ClientUI createAdmin(String name,
             String nickname,
@@ -177,6 +180,7 @@ public class ClientUC {
         }
         existingClient.getBillsId().add(newBill.getId());
         existingClient.setSubscriptionID(newBill.getSubscriptionId());
+        emailService.sendSubscriptionEmail(email, newBill);
         return ClientDTO.toClientDao(clientRepository.save(existingClient));
 
     }

@@ -3,24 +3,19 @@ package com.client.principal.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.client.principal.logic.Network.PaymentUI;
 import com.client.principal.logic.Network.UserUI;
 import com.client.principal.logic.data.newtwork.CategoryNews;
-import com.client.principal.logic.data.newtwork.ClientDAOEP;
 import com.client.principal.logic.data.newtwork.NewsEP;
 import com.client.principal.logic.data.newtwork.PaymentEP;
 import com.client.principal.logic.data.newtwork.UserEP;
-import com.client.principal.logic.data.newtwork.subscriptionTypes;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -40,10 +35,11 @@ public class userController {
             Model model) {
 
         String email = (String) session.getAttribute("email");
-        UserEP result = userUI.buySubscription(email, subscriptionName, methodPay);
+
+        userUI.buySubscription(email, subscriptionName, methodPay);
 
         model.addAttribute("message", "Subscripción comprada con éxito");
-        return "buySubscription";
+        return "redirect:/user";
     }
 
     @PostMapping("/updateClient")
