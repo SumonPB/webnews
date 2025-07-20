@@ -13,13 +13,35 @@
 <body>
 
     <h2 th:text="'Bienvenido ' + ${email}">Bienvenido Usuario</h2>
+    <div>
+    <p th:if="${subscription == null or subscription.endSubscription == null or subscription.endSubscription.isBefore(T(java.time.LocalDateTime).now())}">
+        No posee subscripción activa.
+    </p>
+    <p th:if="${subscription != null and subscription.endSubscription != null and subscription.endSubscription.isAfter(T(java.time.LocalDateTime).now())}">
+        Su subscripción expira el 
+        <span th:text="${#temporals.format(subscription.endSubscription, 'dd-MM-yyyy HH:mm')}">fecha</span>.
+    </p>
+</div>
 
     <div class="buttons">
-        <a href="/configureProfile"><button>Configurar Perfil</button></a>
-        <a href="/buySubscription"><button>Comprar Subscripción</button></a>
-        <a href="/chooseCategories"><button>Escoger Categorías</button></a>
-        <a href="/logout"><button>Salir</button></a>
-    </div>
+    <form action="/configureProfile" method="get" style="display:inline;">
+    <button type="submit" class="btn btn-primary">Configurar perfil</button>
+</form>
+
+    <form action="/goToBuySubscription" method="get" style="display:inline;">
+    <button type="submit">Comprar Subscripción</button>
+</form>
+
+<form action="/chooseCategoriesPage" method="get" style="display:inline;">
+    <button type="submit">Escoger Categorías</button>
+</form>
+
+
+    <a href="/logout"><button>Salir</button></a>
+</div>
+
+</div>
+
 
     <h3>Noticias Recomendadas</h3>
 

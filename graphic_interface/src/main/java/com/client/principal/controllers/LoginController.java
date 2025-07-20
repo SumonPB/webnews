@@ -6,12 +6,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
 import com.client.principal.logic.Network.AdminUI;
 import com.client.principal.logic.Network.UserUI;
 
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@SessionAttributes("email")
 public class LoginController {
     @Autowired
     AdminUI adminUI;
@@ -41,14 +44,16 @@ public class LoginController {
         return "admin";
     }
 
-    @GetMapping("/user")
-    public String userPage() {
-        return "user";
-    }
-
     @GetMapping("/login")
     public String showLoginPage() {
         return "login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/seeNewsNoLog";
+
     }
 
 }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Comprar Subscripción</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .subscription { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; }
+        .subscription h3 { margin-top: 0; }
+    </style>
+</head>
+<body>
+
+    <h2>Elige tu subscripción</h2>
+
+    <div class="subscription">
+        <h3>INSIDER</h3>
+        <p>Acceso a contenido de todas las categorías y contenido anticipado</p>
+        <form action="/buySubscription" method="post">
+            <input type="hidden" name="subscriptionName" value="INSIDER" />
+            <label for="methodPay">Método de Pago:</label>
+            <input type="text" name="methodPay" required />
+            <button type="submit">Comprar</button>
+        </form>
+    </div>
+
+    <div class="subscription">
+        <h3>REDACCIONPlus</h3>
+        <p>Acceso a contenido de dos categorías</p>
+        <form action="/buySubscription" method="post">
+            <input type="hidden" name="subscriptionName" value="REDACCIONPlus" />
+            <label for="methodPay">Método de Pago:</label>
+            <input type="text" name="methodPay" required />
+            <button type="submit">Comprar</button>
+        </form>
+    </div>
+
+    <div class="subscription">
+        <h3>TITULAR</h3>
+        <p>Acceso a contenido de todas las categorías</p>
+        <form action="/buySubscription" method="post">
+            <input type="hidden" name="subscriptionName" value="TITULAR" />
+            <label for="methodPay">Método de Pago:</label>
+            <input type="text" name="methodPay" required />
+            <button type="submit">Comprar</button>
+        </form>
+    </div>
+    <div th:if="${message}">
+    <p th:text="${message}" style="color: green; font-weight: bold;"></p>
+</div>
+
+    <a href="/user"><button>Volver</button></a>
+
+</body>
+</html>

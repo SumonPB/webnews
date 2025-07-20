@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Escoger Categorías</title>
+</head>
+<body>
+
+<h2>Selecciona tus categorías favoritas</h2>
+
+<form action="/choseCategories" method="post">
+    <div th:each="category : ${categories}">
+        <input type="checkbox" name="categories" th:value="${category}" th:id="|cat__${category}|" />
+        <label th:for="|cat__${category}|" th:text="${category}">Categoría</label><br/>
+    </div>
+
+    <button type="submit">Guardar selección</button>
+</form>
+
+
+
+<a href="/user"><button>Volver</button></a>
+
+</body>
+</html>

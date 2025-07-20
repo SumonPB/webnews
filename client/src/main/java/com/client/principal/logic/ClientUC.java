@@ -105,6 +105,8 @@ public class ClientUC {
                 LocalDateTime now = LocalDateTime.now();
                 if (currentbill.getEndSubscription().isAfter(now)) {
                     clientBD.setSubscriptionID(getSubscription.GetSubscriptionByName("FREE").getId());
+                    clientBD.setCategory(null);
+                    clientRepository.save(clientBD);
                 }
             }
         }

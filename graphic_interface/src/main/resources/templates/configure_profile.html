@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Configurar Perfil</title>
+</head>
+<body>
+    <h2>Configurar Perfil</h2>
+    
+<form action="/updateClient" method="post">
+    <label>Nombre:</label>
+    <input type="text" name="name" th:value="${client.name}" required />
+
+    <label>Apodo:</label>
+    <input type="text" name="nickname" th:value="${client.nickname}" required />
+
+    <label>Contraseña:</label>
+    <input type="password" name="password"/><br>
+
+    <button type="submit">Actualizar</button>
+</form>
+
+
+    <br>
+    <a href="/user"><button>Volver</button></a>
+</body>
+</html>

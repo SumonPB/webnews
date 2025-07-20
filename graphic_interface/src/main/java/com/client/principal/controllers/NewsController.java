@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.client.principal.logic.Network.NewsUI;
 import com.client.principal.logic.Network.UserUI;
@@ -16,6 +17,7 @@ import com.client.principal.logic.data.newtwork.NewsEP;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@SessionAttributes("email")
 public class NewsController {
     @Autowired
     NewsUI newsUI;
