@@ -1,5 +1,7 @@
 package com.client.principal.logic.Network;
 
+import java.util.List;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,4 +14,6 @@ public interface PaymentUI {
     public PaymentEP getBillById(
             @RequestParam("billId") String billId);
 
+    @GetMapping("GetAllPayments")
+    public List<PaymentEP> getAllBill();
 }

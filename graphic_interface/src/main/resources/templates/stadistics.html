@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadísticas de Subscripciones</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 30px;
+            color: #333;
+        }
+        canvas {
+            margin: 30px auto;
+            max-width: 600px;
+            display: block;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Estadísticas de Facturación</h2>
+
+<canvas id="subscripcionesPorMes" width="400" height="200"></canvas>
+<canvas id="subscripcionesPorTipo" width="400" height="200"></canvas>
+<canvas id="gananciasTotales" width="400" height="200"></canvas>
+<canvas id="subsActivas" width="400" height="200"></canvas>
+
+<script>
+    async function fetchData() {
+        const response = await fetch('/getAllBills');
+
+
+        const bills = await response.json();
+
+        const now = new Date();
+        const porMes = {};
+        const porTipo = {};
+        let totalGanancias = 0;
+        let activas = 0;
+
+        bills.forEach(bill => {
+            const start = new Date(bill.startSubscription);
+            const end = new Date(bill.endSubscription);
+
+            const mes = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}`;
+            porMes[mes] = (porMes[mes] || 0) + 1;
+
+            porTipo[bill.subscriptionName] = (porTipo[bill.subscriptionName] || 0) + 1;
+
+
+            totalGanancias += bill.amount || 0;
+
+            if (end > now) {
+                activas++;
+            }
+        });
+
+        // Subscripciones por mes
+        new Chart(document.getElementById('subscripcionesPorMes'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(porMes),
+                datasets: [{
+                    label: 'Subscripciones por Mes',
+                    data: Object.values(porMes),
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                }]
+            }
+        });
+
+        // Subscripciones por tipo
+        new Chart(document.getElementById('subscripcionesPorTipo'), {
+            type: 'pie',
+            data: {
+                labels: Object.keys(porTipo),
+                datasets: [{
+                    label: 'Subscripciones por Tipo',
+                    data: Object.values(porTipo),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)'
+                    ]
+                }]
+            }
+        });
+
+        // Ganancias Totales
+        new Chart(document.getElementById('gananciasTotales'), {
+            type: 'bar',
+            data: {
+                labels: ['Total'],
+                datasets: [{
+                    label: 'Ganancias Totales ($)',
+                    data: [totalGanancias],
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)'
+                }]
+            },
+            options: {
+                indexAxis: 'y'
+            }
+        });
+
+        // Subscripciones Activas
+        new Chart(document.getElementById('subsActivas'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Activas', 'Inactivas'],
+                datasets: [{
+                    data: [activas, bills.length - activas],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(201, 203, 207, 0.6)'
+                    ]
+                }]
+            }
+        });
+    }
+
+    fetchData();
+</script>
+<a href="/admin"><button>Volver al Inicio</button></a>
+
+</body>
+</html>

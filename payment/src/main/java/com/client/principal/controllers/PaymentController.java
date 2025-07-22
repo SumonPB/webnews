@@ -32,7 +32,7 @@ public class PaymentController {
     }
 
     @GetMapping("GetAllPayments")
-    public List<PaymentUI> getMethodName() {
+    public List<PaymentUI> getAllBills() {
         return paymentUC.getAllPayments();
     }
 
