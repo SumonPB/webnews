@@ -216,4 +216,17 @@ public class ClientUC {
         }
 
     }
+
+    public List<PaymentEP> getBills(String email) {
+        List<PaymentEP> paymentEPs = new ArrayList<>();
+        if (!email.isEmpty()) {
+            ClientUI clientUI = findClientByEmail(email);
+            if (clientUI.getBillsId() != null) {
+                for (String billId : clientUI.getBillsId()) {
+                    paymentEPs.add(createBill.getBillById(billId));
+                }
+            }
+        }
+        return paymentEPs;
+    }
 }

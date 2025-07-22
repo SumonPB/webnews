@@ -144,6 +144,14 @@ public class userController {
         return "buySubscription";
     }
 
+    @GetMapping("/seeAllBils")
+    public String seeAllBils(HttpSession session, Model model) {
+        String email = (String) session.getAttribute("email");
+        List<PaymentEP> bills = userUI.seeAllBills(email);
+        model.addAttribute("bills", bills);
+        return "bills"; // nombre del template Thymeleaf
+    }
+
 }
 // listar usuarios con subscripcion activa
 //

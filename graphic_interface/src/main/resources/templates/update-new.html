@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Modificar Noticia</title>
+</head>
+<body>
+<h2>Modificar Noticia</h2>
+
+<form action="/ModifyNews" method="post">
+    <label for="Id">Id_Noticia:</label><br>
+    <input type="text" id="id" name="id" required><br><br>
+
+
+    <label for="title">Título:</label><br>
+    <input type="text" id="title" name="title"><br><br>
+
+    <label for="content">Contenido:</label><br>
+    <textarea id="content" name="content"></textarea><br><br>
+
+    <label for="author">Autor:</label><br>
+    <input type="text" id="author" name="author"><br><br>
+
+    <label for="category">Categoría:</label><br>
+    <select name="category" id="category">
+        <option value="">--Seleccionar--</option>
+        <option value="TECNOLOGIA">TECNOLOGIA</option>
+        <option value="POLITICA">POLITICA</option>
+        <option value="ENTRETENIMIENTO">ENTRETENIMIENTO</option>
+        <option value="SALUD">SALUD</option>
+    </select><br><br>
+
+    <label for="subscriptionId">Suscripción:</label><br>
+    <select name="subscriptionId" id="subscriptionId">
+        <option value="">--Seleccionar--</option>
+        <option value="FREE">FREE</option>
+        <option value="TITULAR">TITULAR</option>
+        <option value="REDACCIONPlus">REDACCIONPlus</option>
+        <option value="INSIDER">INSIDER</option>
+    </select><br><br>
+
+    <button type="submit">Guardar Cambios</button>
+</form>
+
+<a href="/admin"><button>Volver</button></a>
+</body>
+</html>

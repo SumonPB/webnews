@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ingresar Nueva Noticia</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<h2>Ingresar Nueva Noticia</h2>
+
+<form action="/InsertNew" method="post">
+    <label for="title">Título:</label>
+    <input type="text" id="title" name="title" required><br><br>
+
+    <label for="content">Contenido:</label><br>
+    <textarea id="content" name="content" rows="5" cols="50" required></textarea><br><br>
+
+    <label for="author">Autor:</label>
+    <input type="text" id="author" name="author" required><br><br>
+
+    <label for="category">Categoría:</label>
+    <select name="category" id="category" required>
+        <option value="" disabled selected>Selecciona una categoría</option>
+        <option value="TECNOLOGIA">TECNOLOGÍA</option>
+        <option value="POLITICA">POLÍTICA</option>
+        <option value="ENTRETENIMIENTO">ENTRETENIMIENTO</option>
+        <option value="SALUD">SALUD</option>
+    </select><br><br>
+
+    <label for="subscriptionName">Tipo de suscripción:</label>
+    <select name="subscriptionName" id="subscriptionName" required>
+        <option value="" disabled selected>Selecciona una suscripción</option>
+        <option value="FREE">FREE</option>
+        <option value="TITULAR">TITULAR</option>
+        <option value="REDACCIONPlus">REDACCIÓN Plus</option>
+        <option value="INSIDER">INSIDER</option>
+    </select><br><br>
+
+    <button type="submit">Crear Noticia</button>
+</form>
+
+<a href="/admin"><button>Volver al Inicio</button></a>
+
+</body>
+</html>

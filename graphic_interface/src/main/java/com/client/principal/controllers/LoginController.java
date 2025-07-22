@@ -39,11 +39,6 @@ public class LoginController {
         return "login";
     }
 
-    @GetMapping("/admin")
-    public String adminPage() {
-        return "admin";
-    }
-
     @GetMapping("/login")
     public String showLoginPage() {
         return "login";

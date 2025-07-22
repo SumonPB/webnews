@@ -2,12 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Escoger Categorías</title>
+    <script>
+        function validateCategories(form) {
+            // Obtiene todos los checkboxes con name "categories"
+            const checkboxes = form.querySelectorAll('input[name="categories"]:checked');
+            if (checkboxes.length === 0) {
+                alert("Por favor, selecciona al menos una categoría.");
+                return false; // evita enviar el formulario
+            }
+            return true; // envía el formulario
+        }
+    </script>
 </head>
 <body>
 
 <h2>Selecciona tus categorías favoritas</h2>
 
-<form action="/choseCategories" method="post">
+<form action="/choseCategories" method="post" onsubmit="return validateCategories(this)">
     <div th:each="category : ${categories}">
         <input type="checkbox" name="categories" th:value="${category}" th:id="|cat__${category}|" />
         <label th:for="|cat__${category}|" th:text="${category}">Categoría</label><br/>
@@ -15,8 +26,6 @@
 
     <button type="submit">Guardar selección</button>
 </form>
-
-
 
 <a href="/user"><button>Volver</button></a>
 

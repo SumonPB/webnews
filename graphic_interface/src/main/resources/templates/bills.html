@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Facturas</title>
+</head>
+<body>
+    <h2>Facturas del Cliente</h2>
+    <table border="1">
+        <tr>
+            <th>Fecha fin de subscripción</th>
+            <th>Método de Pago</th>
+            <th>ID de Subscripción</th>
+            <th>Monto</th>
+        </tr>
+        <tr th:each="bill : ${bills}">
+            <td th:text="${#temporals.format(bill.endSubscription, 'dd-MM-yyyy HH:mm')}">Fecha</td>
+            <td th:text="${bill.paymentMethod}">Método</td>
+            <td th:text="${bill.subscriptionId}">Subscripción</td>
+            <td th:text="${bill.amount}">Monto</td>
+        </tr>
+    </table>
+    <br>
+    <a href="/user"><button>Volver</button></a>
+</body>
+</html>

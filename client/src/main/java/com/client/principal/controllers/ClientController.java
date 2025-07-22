@@ -17,6 +17,7 @@ import com.client.principal.logic.Validations_Encriptations.EmailPaswordVal;
 import com.client.principal.logic.data.CategoryNews;
 import com.client.principal.logic.data.ClientUI;
 import com.client.principal.logic.data.network.NewsEP;
+import com.client.principal.logic.data.network.PaymentEP;
 import com.client.principal.logic.data.network.SubscriptionEP;
 import com.client.principal.logic.data.network.subscriptionTypes;
 
@@ -123,6 +124,12 @@ public class ClientController {
     public List<NewsEP> seeNewsOnLog(@RequestParam("email") String email) {
 
         return clientUC.seeNews(email);
+    }
+
+    @GetMapping("/seeAllBills")
+    public List<PaymentEP> seeAllBills(@RequestParam("email") String email) {
+
+        return clientUC.getBills(email);
     }
 
 }
