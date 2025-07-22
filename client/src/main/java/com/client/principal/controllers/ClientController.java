@@ -18,9 +18,6 @@ import com.client.principal.logic.data.CategoryNews;
 import com.client.principal.logic.data.ClientUI;
 import com.client.principal.logic.data.network.NewsEP;
 import com.client.principal.logic.data.network.PaymentEP;
-import com.client.principal.logic.data.network.SubscriptionEP;
-import com.client.principal.logic.data.network.subscriptionTypes;
-
 import org.springframework.dao.DuplicateKeyException;
 
 @RestController
@@ -29,8 +26,6 @@ public class ClientController {
     private ClientUC clientUC;
     @Autowired
     private Cesar cesar;
-    @Autowired
-    private GetSubscription getSubscription;
 
     @GetMapping("/InsertClient")
     public String insertCustomer(

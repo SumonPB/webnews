@@ -106,7 +106,7 @@ public class ClientUC {
             if (clientBD.getBillsId() != null) {
                 PaymentEP currentbill = createBill.getBillById(clientBD.getBillsId().getLast());
                 LocalDateTime now = LocalDateTime.now();
-                if (currentbill.getEndSubscription().isAfter(now)) {
+                if (currentbill.getEndSubscription().isBefore(now)) {
                     clientBD.setSubscriptionID(getSubscription.GetSubscriptionByName("FREE").getId());
                     clientBD.setCategory(null);
                     clientRepository.save(clientBD);
@@ -156,10 +156,14 @@ public class ClientUC {
         if (subscription.getName().equals(subscriptionTypes.FREE)) {
             return ClientDTO.toClientDao(existingClient);
         } else if (subscription.getName().equals(subscriptionTypes.TITULAR)) {
-            if (categoryNews.size() >= 2) {
-                existingClient.setCategory(Arrays.asList(categoryNews.get(0), categoryNews.get(1)));
+            if (categoryNews.size() >= 1 && categoryNews.size() <= 2) {
+                if (categoryNews.size() == 1) {
+                    existingClient.setCategory(Arrays.asList(categoryNews.get(0)));
+                } else {
+                    existingClient.setCategory(Arrays.asList(categoryNews.get(0), categoryNews.get(1)));
+                }
             } else {
-                throw new IllegalArgumentException("Se requieren al menos dos categorías para TITULARPlus.");
+                existingClient.setCategory(Arrays.asList(categoryNews.get(0), categoryNews.get(1)));
             }
 
             return ClientDTO.toClientDao(clientRepository.save(existingClient));
@@ -184,28 +188,45 @@ public class ClientUC {
         return ClientDTO.toClientDao(clientRepository.save(existingClient));
 
     }
+    // ----------------------------------------------------------------------------------------------------------
 
     public ClientUI updateCli(String name,
             String nickname,
             String email,
             String password,
             String subscriptionName) {
+
         Client existingClient = clientRepository.getClientByEmail(email);
         if (existingClient == null) {
-            return null; // Client not found
+            return null;
         }
-        if (name != null)
-            System.out.println(name);
-        existingClient.setName(name);
-        if (nickname != null)
+
+        if (name != null && !name.equalsIgnoreCase("null")) {
+            existingClient.setName(name);
+        }
+        if (nickname != null && !nickname.equalsIgnoreCase("null")) {
             existingClient.setNickname(nickname);
-        if (password != null)
+        }
+        if (password != null && !password.equalsIgnoreCase("null")) {
             existingClient.setPassword(password);
-        if (subscriptionName != null)
-            existingClient.setSubscriptionID(getSubscription.GetSubscriptionByName(subscriptionName).getId());
+        }
+        if (subscriptionName != null && !subscriptionName.equalsIgnoreCase("null")) {
+            if (subscriptionName.equals("FREE")) {
+                existingClient.setCategory(null);
+            }
+
+            var subscription = getSubscription.GetSubscriptionByName(subscriptionName);
+            if (subscription != null) {
+                existingClient.setSubscriptionID(subscription.getId());
+            } else {
+                throw new IllegalArgumentException("Suscripción no válida: " + subscriptionName);
+            }
+        }
+
         return ClientDTO.toClientUI(clientRepository.save(existingClient));
     }
 
+    // ----------------------------------------------------------------------------------------------------------
     public List<NewsEP> seeNews(String email) {
         if (!email.isEmpty()) {
             ClientUI client = findClientByEmail(email);

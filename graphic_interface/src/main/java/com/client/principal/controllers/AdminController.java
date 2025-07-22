@@ -14,6 +14,7 @@ import com.client.principal.logic.Network.UserUI;
 import com.client.principal.logic.data.newtwork.ClientDAOEP;
 import com.client.principal.logic.data.newtwork.NewsEP;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -66,6 +67,7 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String adminPage(HttpSession session, Model model) {
+
         String email = (String) session.getAttribute("email");
         if (email == null) {
             return "redirect:/login";

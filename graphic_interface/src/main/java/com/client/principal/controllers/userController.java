@@ -20,7 +20,6 @@ import com.client.principal.logic.data.newtwork.UserEP;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@SessionAttributes("email")
 public class userController {
     @Autowired
     UserUI userUI;
@@ -108,7 +107,9 @@ public class userController {
 
     @GetMapping("/user")
     public String userPage(HttpSession session, Model model) {
+        //
         String email = (String) session.getAttribute("email");
+        System.out.println("Email:" + email);
         if (email == null) {
             return "redirect:/login";
         }
@@ -122,6 +123,8 @@ public class userController {
         } else {
             model.addAttribute("subscription", null);
         }
+        System.out.println("Session ID: " + session.getId() + " | Email: " + email);
+
         model.addAttribute("news", userNews);
         model.addAttribute("email", email);
         return "user";
@@ -149,9 +152,7 @@ public class userController {
         String email = (String) session.getAttribute("email");
         List<PaymentEP> bills = userUI.seeAllBills(email);
         model.addAttribute("bills", bills);
-        return "bills"; // nombre del template Thymeleaf
+        return "bills";
     }
 
 }
-// listar usuarios con subscripcion activa
-//

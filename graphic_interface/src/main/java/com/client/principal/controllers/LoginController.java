@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.client.principal.logic.Network.AdminUI;
 import com.client.principal.logic.Network.UserUI;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@SessionAttributes("email")
 public class LoginController {
     @Autowired
     AdminUI adminUI;
@@ -25,13 +26,19 @@ public class LoginController {
     public String loginCheck(@RequestParam("email") String email,
             @RequestParam("password") String password,
             Model model,
-            HttpSession session) {
+            HttpServletRequest request,
+            HttpServletResponse response) {
 
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        HttpSession newSession = request.getSession(true);
         if (adminUI.validationAdmin(email, password)) {
-            session.setAttribute("email", email);
+            newSession.setAttribute("email", email);
             return "redirect:/admin";
         } else if (userUI.validation(email, password)) {
-            session.setAttribute("email", email);
+            newSession.setAttribute("email", email);
             return "redirect:/user";
         }
 
