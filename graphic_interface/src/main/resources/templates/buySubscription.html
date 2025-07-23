@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Comprar Subscripción</title>
-    <link rel="stylesheet" href="../static/css/style-buySuscription.css">
-    <!-- <link rel="stylesheet" th:href="@{/css/style-buySuscription.css}"> -->
+    <link rel="stylesheet" th:href="@{/css/style-buySuscription.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -14,6 +13,7 @@
     <h2><i class="fas fa-crown"></i> Elige tu subscripción</h2>
 
     <div class="card-container">
+
         <!-- TITULAR -->
         <div class="card" id="card-titular">
             <div class="card-inner">
@@ -36,6 +36,7 @@
                 <div class="card-back">
                     <form th:action="@{/buySubscription}" method="post" onsubmit="return validateCard(this)">
                         <input type="hidden" name="subscriptionName" value="TITULAR" />
+                        <input type="hidden" name="methodPay" value="creditCard" />
                         <div class="card-type" id="type-titular">
                             <i class="fas fa-credit-card"></i>
                             <span>Tarjeta de crédito</span>
@@ -88,6 +89,7 @@
                 <div class="card-back">
                     <form th:action="@{/buySubscription}" method="post" onsubmit="return validateCard(this)">
                         <input type="hidden" name="subscriptionName" value="REDACCIONPlus" />
+                        <input type="hidden" name="methodPay" value="creditCard" />
                         <div class="card-type" id="type-redaccion">
                             <i class="fas fa-credit-card"></i>
                             <span>Tarjeta de crédito</span>
@@ -141,6 +143,7 @@
                 <div class="card-back">
                     <form th:action="@{/buySubscription}" method="post" onsubmit="return validateCard(this)">
                         <input type="hidden" name="subscriptionName" value="INSIDER" />
+                        <input type="hidden" name="methodPay" value="creditCard" />
                         <div class="card-type" id="type-insider">
                             <i class="fas fa-credit-card"></i>
                             <span>Tarjeta de crédito</span>
@@ -178,8 +181,8 @@
         </button>
     </a>
 
+    <!-- Tu script JavaScript permanece igual -->
     <script>
-        // Tu JavaScript existente permanece igual
         let activeCardId = null;
 
         function flipCard(cardId) {
