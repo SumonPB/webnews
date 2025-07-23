@@ -1,0 +1,438 @@
+:root {
+  --primary-color: #1e293b;
+  --accent-color: #4f46e5;
+  --accent-hover: #4338ca;
+  --background-light: #f9fafb;
+  --card-bg: #ffffff;
+  --card-border: #e0e7ff;
+  --text-color: #334155;
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+  --shadow-light: 0 6px 16px hsla(220, 30%, 50%, 0.1);
+  --shadow-hover: 0 10px 24px hsla(220, 30%, 50%, 0.15);
+  --font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background-light);
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 2.5rem 1rem;
+  color: var(--text-color);
+  text-align: center;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h2 {
+  font-weight: 800;
+  font-size: 2.4rem;
+  margin-bottom: 2.5rem;
+  color: var(--primary-color);
+  letter-spacing: -0.5px;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.card {
+  width: 100%;
+  max-width: 340px;
+  height: 460px;
+  perspective: 1200px;
+  cursor: pointer;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-light);
+  transition: var(--transition);
+  transform-style: preserve-3d;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+}
+
+.card:hover .card-inner {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-5px);
+}
+
+.card.flip .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-md);
+  backface-visibility: hidden;
+  padding: 2rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-front {
+  color: var(--primary-color);
+  background: var(--card-bg);
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.card-header i {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.premium-icon {
+  color: #fbbf24;
+  text-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);
+}
+
+.star-icon {
+  color: #3b82f6;
+  text-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.newspaper-icon {
+  color: #6b7280;
+  text-shadow: 0 2px 4px rgba(107, 114, 128, 0.3);
+}
+
+.card-front h3 {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  font-weight: 700;
+}
+
+.card-front ul {
+  list-style: none;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+  text-align: left;
+  padding: 0;
+}
+
+.card-front ul li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.card-front ul li i {
+  min-width: 20px;
+  text-align: center;
+  color: var(--accent-color);
+}
+
+.card-front .price {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.card-front button {
+  background-color: var(--accent-color);
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  transition: var(--transition);
+  align-self: center;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(79, 70, 229, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.card-front button:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(79, 70, 229, 0.4);
+}
+
+.card-back {
+  background: #f9fafb;
+  color: var(--primary-color);
+  transform: rotateY(180deg);
+  box-shadow: inset 0 0 10px rgba(79, 70, 229, 0.08);
+  padding-top: 1.5rem;
+}
+
+.card-back form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: flex-start;
+}
+
+.card-type {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--accent-color);
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  justify-content: center;
+}
+
+/* Contenedor de input con icono corregido */
+.input-group {
+  position: relative;
+  margin-bottom: 1.2rem;
+  width: 100%;
+}
+
+.input-group i.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 0.9rem;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.card-back input {
+  font-size: 1rem;
+  padding: 0.6rem 0.9rem 0.6rem 2.5rem;
+  margin-bottom: 0;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--card-border);
+  transition: var(--transition);
+  outline-offset: 2px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: white;
+}
+
+.card-back input:focus {
+  border-color: var(--accent-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.card-back input::placeholder {
+  color: #94a3b8;
+}
+
+/* Espacio entre inputs */
+.input-group + .input-group {
+  margin-top: 1rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.card-back button[type="submit"] {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.card-back button[type="submit"]:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.card-back button[type="button"] {
+  background-color: #e2e8f0;
+  color: var(--primary-color);
+}
+
+.card-back button[type="button"]:hover {
+  background-color: #cbd5e1;
+}
+
+.back-btn {
+  margin-top: 3rem;
+  font-weight: 600;
+  background-color: transparent;
+  border: 2px solid var(--accent-color);
+  color: var(--accent-color);
+  padding: 0.7rem 2rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.back-btn:hover {
+  background-color: var(--accent-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 1.5rem 0.5rem;
+  }
+  
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .card-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 0.5rem;
+    max-width: 100%;
+  }
+  
+  .card {
+    max-width: 100%;
+    height: auto;
+    min-height: 440px;
+  }
+  
+  .card-front ul li {
+    font-size: 0.9rem;
+  }
+  
+  .card-front .price {
+    font-size: 1.2rem;
+  }
+  
+  .button-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .card-back input {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.8rem 0.5rem 2.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 1rem 0.25rem;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .card {
+    padding: 1.5rem;
+  }
+  
+  .card-header i {
+    font-size: 2rem;
+  }
+  
+  .card-front h3 {
+    font-size: 1.4rem;
+  }
+  
+  .card-front ul li {
+    margin-bottom: 0.6rem;
+    gap: 0.5rem;
+  }
+  
+  .card-front .price {
+    font-size: 1.1rem;
+  }
+  
+  .card-front button,
+  .back-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .card-back input {
+    font-size: 0.9rem;
+  }
+  
+  .button-group button {
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Fix para evitar desbordamientos */
+.card-front ul,
+.card-back form,
+.card-front,
+.card-back {
+  overflow: hidden;
+}
+
+.card-front ul li,
+.card-back input,
+.card-back button {
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Asegurar que los formularios no se desborden */
+.card-back form * {
+  max-width: 100%;
+}

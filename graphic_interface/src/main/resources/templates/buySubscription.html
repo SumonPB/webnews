@@ -1,129 +1,238 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
+    <meta charset="UTF-8">
     <title>Comprar Subscripción</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .subscription { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; }
-        .subscription h3 { margin-top: 0; }
-    </style>
+    <link rel="stylesheet" href="../static/css/style-buySuscription.css">
+    <!-- <link rel="stylesheet" th:href="@{/css/style-buySuscription.css}"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
 
-    <h2>Elige tu subscripción</h2>
+    <h2><i class="fas fa-crown"></i> Elige tu subscripción</h2>
 
-    <div class="subscription">
-    <h3>INSIDER</h3>
-    <p>Acceso a contenido de todas las categorías y contenido anticipado</p>
-    <form action="/buySubscription" method="post" onsubmit="return validateCard(this)">
-        <input type="hidden" name="subscriptionName" value="INSIDER" />
-        <label for="methodPay">Método de Pago:</label>
-        <input type="text" name="methodPay" required />
-        <div>
-            <label for="cardNumber">Número de tarjeta (ejemplo):</label>
-            <input type="text" id="cardNumber" placeholder="**** **** **** 1234" maxlength="19" />
+    <div class="card-container">
+        <!-- TITULAR -->
+        <div class="card" id="card-titular">
+            <div class="card-inner">
+                <div class="card-front">
+                    <div class="card-header">
+                        <i class="fas fa-newspaper newspaper-icon"></i>
+                        <h3>TITULAR</h3>
+                    </div>
+                    <ul>
+                        <li><i class="fas fa-newspaper"></i> Noticias generales</li>
+                        <li><i class="fas fa-heart"></i> 2 categorías favoritas</li>
+                        <li><i class="fas fa-times-circle"></i> Sin contenido exclusivo</li>
+                        <li><i class="fas fa-bell"></i> Notificaciones básicas</li>
+                    </ul>
+                    <p class="price"><i class="fas fa-tag"></i> $1.99 / mes</p>
+                    <button onclick="flipCard('titular')">
+                        <i class="fas fa-shopping-cart"></i> Comprar
+                    </button>
+                </div>
+                <div class="card-back">
+                    <form th:action="@{/buySubscription}" method="post" onsubmit="return validateCard(this)">
+                        <input type="hidden" name="subscriptionName" value="TITULAR" />
+                        <div class="card-type" id="type-titular">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Tarjeta de crédito</span>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-credit-card input-icon"></i>
+                            <input type="text" name="cardNumber" placeholder="Número de tarjeta" maxlength="19"
+                                oninput="detectCardType(this, 'type-titular')" required />
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="text" name="cvv" placeholder="CVV" maxlength="3" required />
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-calendar input-icon"></i>
+                            <input type="month" name="expiry" required />
+                        </div>
+                        <div class="button-group">
+                            <button type="submit">
+                                <i class="fas fa-check"></i> Pagar
+                            </button>
+                            <button type="button" onclick="resetCards()">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div>
-            <label for="cvv">CVV:</label>
-            <input type="text" id="cvv" placeholder="123" maxlength="3" />
+
+        <!-- REDACCIÓN+ -->
+        <div class="card" id="card-redaccion">
+            <div class="card-inner">
+                <div class="card-front">
+                    <div class="card-header">
+                        <i class="fas fa-star star-icon"></i>
+                        <h3>REDACCIÓN+</h3>
+                    </div>
+                    <ul>
+                        <li><i class="fas fa-book-open"></i> Acceso a todas las categorías</li>
+                        <li><i class="fas fa-lock"></i> Contenido exclusivo</li>
+                        <li><i class="fas fa-photo-video"></i> Multimedia y recomendaciones</li>
+                        <li><i class="fas fa-life-ring"></i> Soporte básico</li>
+                    </ul>
+                    <p class="price"><i class="fas fa-tag"></i> $3.99 / mes</p>
+                    <button onclick="flipCard('redaccion')">
+                        <i class="fas fa-shopping-cart"></i> Comprar
+                    </button>
+                </div>
+                <div class="card-back">
+                    <form th:action="@{/buySubscription}" method="post" onsubmit="return validateCard(this)">
+                        <input type="hidden" name="subscriptionName" value="REDACCIONPlus" />
+                        <div class="card-type" id="type-redaccion">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Tarjeta de crédito</span>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-credit-card input-icon"></i>
+                            <input type="text" name="cardNumber" placeholder="Número de tarjeta" maxlength="19"
+                                oninput="detectCardType(this, 'type-redaccion')" required />
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="text" name="cvv" placeholder="CVV" maxlength="3" required />
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-calendar input-icon"></i>
+                            <input type="month" name="expiry" required />
+                        </div>
+                        <div class="button-group">
+                            <button type="submit">
+                                <i class="fas fa-check"></i> Pagar
+                            </button>
+                            <button type="button" onclick="resetCards()">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div>
-            <label for="expiry">Fecha de expiración:</label>
-            <input type="month" id="expiry" />
+
+        <!-- INSIDER -->
+        <div class="card" id="card-insider">
+            <div class="card-inner">
+                <div class="card-front">
+                    <div class="card-header">
+                        <i class="fas fa-crown premium-icon"></i>
+                        <h3>INSIDER</h3>
+                    </div>
+                    <ul>
+                        <li><i class="fas fa-bolt"></i> Contenido anticipado</li>
+                        <li><i class="fas fa-newspaper"></i> Reportajes especiales</li>
+                        <li><i class="fas fa-calendar-alt"></i> Eventos digitales</li>
+                        <li><i class="fas fa-headset"></i> Soporte prioritario</li>
+                        <li><i class="fas fa-ban"></i> Sin anuncios</li>
+                    </ul>
+                    <p class="price"><i class="fas fa-tag"></i> $6.99 / mes</p>
+                    <button onclick="flipCard('insider')">
+                        <i class="fas fa-shopping-cart"></i> Comprar
+                    </button>
+                </div>
+                <div class="card-back">
+                    <form th:action="@{/buySubscription}" method="post" onsubmit="return validateCard(this)">
+                        <input type="hidden" name="subscriptionName" value="INSIDER" />
+                        <div class="card-type" id="type-insider">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Tarjeta de crédito</span>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-credit-card input-icon"></i>
+                            <input type="text" name="cardNumber" placeholder="Número de tarjeta" maxlength="19"
+                                oninput="detectCardType(this, 'type-insider')" required />
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="text" name="cvv" placeholder="CVV" maxlength="3" required />
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-calendar input-icon"></i>
+                            <input type="month" name="expiry" required />
+                        </div>
+                        <div class="button-group">
+                            <button type="submit">
+                                <i class="fas fa-check"></i> Pagar
+                            </button>
+                            <button type="button" onclick="resetCards()">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <button type="submit">Comprar</button>
-    </form>
     </div>
 
+    <a href="/user">
+        <button class="back-btn">
+            <i class="fas fa-arrow-left"></i> Volver
+        </button>
+    </a>
 
-    <div class="subscription">
-    <h3>REDACCIONPlus</h3>
-    <p>Acceso a contenido de todas las categorías</p>
-    <form action="/buySubscription" method="post" onsubmit="return validateCard(this)">
-        <input type="hidden" name="subscriptionName" value="REDACCIONPlus" />
-        <label for="methodPay">Método de Pago:</label>
-        <input type="text" name="methodPay" required />
-        <div>
-            <label for="cardNumber">Número de tarjeta (ejemplo):</label>
-            <input type="text" id="cardNumber" placeholder="**** **** **** 1234" maxlength="19" />
-        </div>
-        <div>
-            <label for="cvv">CVV:</label>
-            <input type="text" id="cvv" placeholder="123" maxlength="3" />
-        </div>
-        <div>
-            <label for="expiry">Fecha de expiración:</label>
-            <input type="month" id="expiry" />
-        </div>
-        <button type="submit">Comprar</button>
-    </form>
-    </div>
+    <script>
+        // Tu JavaScript existente permanece igual
+        let activeCardId = null;
 
-    <div class="subscription">
-    <h3>TITULAR</h3>
-    <p>Acceso a contenido al contenido de dos de nuestras categorias</p>
-    <form action="/buySubscription" method="post" onsubmit="return validateCard(this)">
-        <input type="hidden" name="subscriptionName" value="TITULAR" />
-        <label for="methodPay">Método de Pago:</label>
-        <input type="text" name="methodPay" required />
-        <div>
-            <label for="cardNumber">Número de tarjeta (ejemplo):</label>
-            <input type="text" id="cardNumber" placeholder="**** **** **** 1234" maxlength="19" />
-        </div>
-        <div>
-            <label for="cvv">CVV:</label>
-            <input type="text" id="cvv" placeholder="123" maxlength="3" />
-        </div>
-        <div>
-            <label for="expiry">Fecha de expiración:</label>
-            <input type="month" id="expiry" />
-        </div>
-        <button type="submit">Comprar</button>
-    </form>
-    </div>
+        function flipCard(cardId) {
+            if (activeCardId && activeCardId !== cardId) {
+                document.getElementById(`card-${activeCardId}`).classList.remove("flip");
+            }
+            const card = document.getElementById(`card-${cardId}`);
+            card.classList.toggle("flip");
+            activeCardId = card.classList.contains("flip") ? cardId : null;
+        }
 
-    <a href="/user"><button>Volver</button></a>
+        function resetCards() {
+            if (activeCardId) {
+                document.getElementById(`card-${activeCardId}`).classList.remove("flip");
+                activeCardId = null;
+            }
+        }
 
+        function detectCardType(input, displayId) {
+            const value = input.value.replace(/\s/g, '');
+            let type = '';
+
+            if (/^4/.test(value)) type = 'VISA';
+            else if (/^5[1-5]/.test(value)) type = 'MasterCard';
+            else if (/^3[47]/.test(value)) type = 'American Express';
+            else if (/^6/.test(value)) type = 'Discover';
+
+            document.getElementById(displayId).innerHTML = type ?
+                `<i class="fas fa-credit-card"></i> Tipo: ${type}` :
+                '<i class="fas fa-credit-card"></i> Tarjeta de crédito';
+        }
+
+        function validateCard(form) {
+            const cardNumber = form.cardNumber.value.replace(/\s/g, '');
+            const cvv = form.cvv.value;
+            const expiry = form.expiry.value;
+
+            if (!/^\d{16}$/.test(cardNumber)) {
+                alert("Número de tarjeta inválido. Debe tener 16 dígitos.");
+                return false;
+            }
+            if (!/^\d{3}$/.test(cvv)) {
+                alert("CVV inválido. Debe tener 3 dígitos.");
+                return false;
+            }
+            if (new Date(expiry + "-01") < new Date()) {
+                alert("La tarjeta está expirada.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 </body>
-<script>
-function validateCard(form) {
-    const cardNumberInput = form.querySelector("#cardNumber");
-    const cvvInput = form.querySelector("#cvv");
-    const expiryInput = form.querySelector("#expiry");
-    const methodPayInput = form.querySelector("input[name='methodPay']");
-
-    const cardNumber = cardNumberInput.value.trim();
-    const cvv = cvvInput.value.trim();
-    const expiry = expiryInput.value;
-    if (cardNumber && (!/^\d{16}$/.test(cardNumber.replaceAll(" ", "")))) {
-        alert("Número de tarjeta inválido. Debe tener 16 dígitos.");
-        cardNumberInput.value = "";
-        cvvInput.value = "";
-        expiryInput.value = "";
-        methodPayInput.value = "";
-        return false;
-    }
-    if (cvv && (!/^\d{3}$/.test(cvv))) {
-        alert("CVV inválido. Debe tener 3 dígitos.");
-        cardNumberInput.value = "";
-        cvvInput.value = "";
-        expiryInput.value = "";
-        methodPayInput.value = "";
-        return false;
-    }
-    if (expiry && (new Date(expiry + "-01") < new Date())) {
-        alert("La tarjeta está expirada.");
-        cardNumberInput.value = "";
-        cvvInput.value = "";
-        expiryInput.value = "";
-        methodPayInput.value = "";
-        return false;
-    }
-
-    return true;
-}
-</script>
-
-
 
 </html>
