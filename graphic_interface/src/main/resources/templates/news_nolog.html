@@ -1,39 +1,89 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
-    <title>Noticias</title>
+    <meta charset="UTF-8">
+    <title>Noticias | Tu Información al Instante</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
-    <link rel="stylesheet" th:href="@{/css/initPage.css}" />
-
-
+    <link rel="stylesheet" th:href="@{/css/style-newsPage.css}">
+    <!-- <link rel="stylesheet" href="../static/css/style-newsPage.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 
-    <div class="buttons">
-        <a href="/login"><button>Login</button></a>
-        <a href="/register"><button>Register</button></a>
-    </div>
-
-    <h2>Noticias Disponibles</h2>
-
-    <div th:each="news : ${news}">
-        <div class="news-item">
-            <div class="news-title" th:text="${news.title}">Título</div>
-            <div class="news-author">Autor: <span th:text="${news.author}">Autor</span></div>
-            <div class="news-category">Categoría: <span th:text="${news.category}">Categoría</span></div>
-            <p th:text="${news.content}">Contenido</p>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="brand">📰 TII</div>
+            <input type="checkbox" id="menu-toggle" class="menu-toggle">
+            <label for="menu-toggle" class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            <ul class="nav-links">
+                <li><a th:href="@{/login}">Iniciar Sesión</a></li>
+                <li><a th:href="@{/register}" class="btn-register">Registrarse</a></li>
+            </ul>
         </div>
-    </div>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <main class="main-content">
+        <section class="news-section">
+            <h2 class="section-title">📰 Noticias Disponibles</h2>
+
+            <div class="news-grid" th:each="news : ${news}">
+                <div class="news-card">
+                    <div class="news-header">
+                        <h3 class="news-title" th:text="${news.title}">Título de la noticia</h3>
+                        <span class="news-category" th:text="${news.category}">Categoría</span>
+                    </div>
+                    <p class="news-content" th:text="${news.content}">Contenido de la noticia.</p>
+                    <div class="news-footer">
+                        <span class="news-author">✍️ <span th:text="${news.author}">Autor</span></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>📰 Tu Información al Instante</h3>
+                <p>Noticias actualizadas y confiables para estar siempre informado.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Enlaces Rápidos</h4>
+                <ul>
+                    <li><a th:href="@{/}">Inicio</a></li>
+                    <li><a th:href="@{/login}">Iniciar Sesión</a></li>
+                    <li><a th:href="@{/register}">Registrarse</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <p>📧 contacto@tuinformacionalinstante.com</p>
+                <p>📍 Quito, Ecuador</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="year"></span> Tu Información al Instante. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
     <script>
-        // Limpiar cualquier dato persistente del navegador (opcional)
         localStorage.clear();
         sessionStorage.clear();
+        document.getElementById("year").textContent = new Date().getFullYear();
     </script>
-
 </body>
+
 </html>

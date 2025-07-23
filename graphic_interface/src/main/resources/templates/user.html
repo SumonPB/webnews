@@ -1,62 +1,64 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
-    <title>Usuario</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .buttons { margin-bottom: 20px; }
-        .news-item { border: 1px solid #ccc; padding: 10px; margin-bottom: 15px; }
-        .news-title { font-size: 18px; font-weight: bold; }
-        .news-author, .news-category { font-style: italic; color: #555; }
-    </style>
+    <meta charset="UTF-8">
+    <title>Panel de Usuario</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style-user.css}">
 </head>
+
 <body>
 
     <h2 th:text="'Bienvenido ' + ${email}">Bienvenido Usuario</h2>
-    <div>
-    <p th:if="${subscription == null or subscription.endSubscription == null or subscription.endSubscription.isBefore(T(java.time.LocalDateTime).now())}">
-        No posee subscripción activa.
-    </p>
-    <p th:if="${subscription != null and subscription.endSubscription != null and subscription.endSubscription.isAfter(T(java.time.LocalDateTime).now())}">
-        Su subscripción expira el 
-        <span th:text="${#temporals.format(subscription.endSubscription, 'dd-MM-yyyy HH:mm')}">fecha</span>.
-    </p>
-</div>
+
+    <div class="subscription-status">
+        <p
+            th:if="${subscription == null or subscription.endSubscription == null or subscription.endSubscription.isBefore(T(java.time.LocalDateTime).now())}">
+            No posee subscripción activa.
+        </p>
+        <p
+            th:if="${subscription != null and subscription.endSubscription != null and subscription.endSubscription.isAfter(T(java.time.LocalDateTime).now())}">
+            Su subscripción expira el
+            <strong th:text="${#temporals.format(subscription.endSubscription, 'dd-MM-yyyy HH:mm')}">fecha</strong>.
+        </p>
+    </div>
 
     <div class="buttons">
-    <form action="/configureProfile" method="get" style="display:inline;">
-    <button type="submit" class="btn btn-primary">Configurar perfil</button>
-</form>
+        <form action="/configureProfile" method="get">
+            <button type="submit">Configurar perfil</button>
+        </form>
 
-    <form action="/goToBuySubscription" method="get" style="display:inline;">
-    <button type="submit">Comprar Subscripción</button>
-</form>
+        <form action="/goToBuySubscription" method="get">
+            <button type="submit">Comprar Subscripción</button>
+        </form>
 
-<form action="/chooseCategoriesPage" method="get" style="display:inline;">
-    <button type="submit">Escoger Categorías</button>
-</form>
+        <form action="/chooseCategoriesPage" method="get">
+            <button type="submit">Escoger Categorías</button>
+        </form>
 
-<form action="/seeAllBils" method="get" style="display:inline;">
-    <button type="submit">Ver Facturas</button>
-</form>
+        <form action="/seeAllBils" method="get">
+            <button type="submit">Ver Facturas</button>
+        </form>
 
-    <a th:href="@{/logout}"><button>Salir</button></a>
-</div>
-
-</div>
-
+        <a th:href="@{/logout}">
+            <button>Salir</button>
+        </a>
+    </div>
 
     <h3>Noticias Recomendadas</h3>
 
     <div th:each="news : ${news}">
         <div class="news-item">
             <div class="news-title" th:text="${news.title}">Título</div>
-            <div class="news-author">Autor: <span th:text="${news.author}">Autor</span></div>
-            <div class="news-category">Categoría: <span th:text="${news.category}">Categoría</span></div>
+            <div class="news-meta">
+                <span>Autor: <span th:text="${news.author}">Autor</span></span>
+                <span class="badge" th:text="${news.category}">Categoría</span>
+            </div>
             <p th:text="${news.content}">Contenido</p>
         </div>
     </div>
 
-    
 </body>
+
 </html>
