@@ -12,6 +12,7 @@
     <link rel="stylesheet" th:href="@{/css/style-newsPage.css}">
     <!-- <link rel="stylesheet" href="../static/css/style-newsPage.css"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -19,7 +20,9 @@
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="navbar-container">
-            <div class="brand">📰 TII</div>
+            <div class="brand">
+                <i class="fas fa-newspaper"></i> TII
+            </div>
             <input type="checkbox" id="menu-toggle" class="menu-toggle">
             <label for="menu-toggle" class="hamburger">
                 <span></span>
@@ -27,51 +30,117 @@
                 <span></span>
             </label>
             <ul class="nav-links">
-                <li><a th:href="@{/login}">Iniciar Sesión</a></li>
-                <li><a th:href="@{/register}" class="btn-register">Registrarse</a></li>
+                <li><a th:href="@{/login}"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
+                <li><a th:href="@{/register}" class="btn-register"><i class="fas fa-user-plus"></i> Registrarse</a></li>
             </ul>
         </div>
     </nav>
 
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Tu Información al Instante</h1>
+            <p class="hero-subtitle">Noticias actualizadas y confiables para mantenerte siempre informado</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <i class="fas fa-newspaper"></i>
+                    <span class="stat-number" th:text="${news != null ? news.size() : 0}">0</span>
+                    <span class="stat-label">Noticias</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <span class="stat-number">10K+</span>
+                    <span class="stat-label">Lectores</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-sync-alt"></i>
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Actualización</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- CONTENIDO -->
     <main class="main-content">
         <section class="news-section">
-            <h2 class="section-title">📰 Noticias Disponibles</h2>
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-fire"></i> Últimas Noticias</h2>
+                <div class="section-divider"></div>
+                <p class="section-subtitle">Descubre las noticias más relevantes del momento</p>
+            </div>
 
-            <div class="news-grid" th:each="news : ${news}">
-                <div class="news-card">
+            <div class="news-grid" th:if="${news != null and !news.empty}">
+                <div th:each="newsItem : ${news}" class="news-card">
+                    <div class="news-badge" th:text="${newsItem.category}">Categoría</div>
                     <div class="news-header">
-                        <h3 class="news-title" th:text="${news.title}">Título de la noticia</h3>
-                        <span class="news-category" th:text="${news.category}">Categoría</span>
+                        <h3 class="news-title" th:text="${newsItem.title}">Título de la noticia</h3>
                     </div>
-                    <p class="news-content" th:text="${news.content}">Contenido de la noticia.</p>
+                    <p class="news-content" th:text="${newsItem.content}">Contenido de la noticia.</p>
                     <div class="news-footer">
-                        <span class="news-author">✍️ <span th:text="${news.author}">Autor</span></span>
+                        <div class="news-meta">
+                            <span class="news-author"><i class="fas fa-user"></i> <span th:text="${newsItem.author}">Autor</span></span>
+                            <span class="news-date"><i class="fas fa-clock"></i> Hoy</span>
+                        </div>
+                        <button class="read-more-btn">
+                            <span>Leer más</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
+            </div>
+
+            <div class="no-news" th:if="${news == null or news.empty}">
+                <i class="fas fa-newspaper"></i>
+                <h3>No hay noticias disponibles</h3>
+                <p>Estamos trabajando para traerte las últimas noticias pronto.</p>
             </div>
         </section>
     </main>
 
+    <!-- NEWSLETTER -->
+    <section class="newsletter-section">
+        <div class="newsletter-container">
+            <div class="newsletter-content">
+                <h3><i class="fas fa-bell"></i> ¡Mantente Informado!</h3>
+                <p>Regístrate para recibir las noticias más importantes directamente en tu correo.</p>
+                <a th:href="@{/register}" class="newsletter-btn">Registrarse Ahora</a>
+            </div>
+        </div>
+    </section>
+
     <!-- FOOTER -->
     <footer class="footer">
         <div class="footer-container">
-            <div class="footer-section">
-                <h3>📰 Tu Información al Instante</h3>
-                <p>Noticias actualizadas y confiables para estar siempre informado.</p>
+            <div class="footer-section brand-info">
+                <div class="footer-logo">
+                    <i class="fas fa-newspaper"></i>
+                    <h3>Tu Información al Instante</h3>
+                </div>
+                <p class="footer-description">Noticias actualizadas y confiables para estar siempre informado. Tu fuente confiable de información 24/7.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
             </div>
             <div class="footer-section">
-                <h4>Enlaces Rápidos</h4>
+                <h4><i class="fas fa-link"></i> Enlaces Rápidos</h4>
                 <ul>
-                    <li><a th:href="@{/}">Inicio</a></li>
-                    <li><a th:href="@{/login}">Iniciar Sesión</a></li>
-                    <li><a th:href="@{/register}">Registrarse</a></li>
+                    <li><a th:href="@{/}"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a th:href="@{/login}"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
+                    <li><a th:href="@{/register}"><i class="fas fa-user-plus"></i> Registrarse</a></li>
+                    <li><a href="#"><i class="fas fa-info-circle"></i> Acerca de</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>Contacto</h4>
-                <p>📧 contacto@tuinformacionalinstante.com</p>
-                <p>📍 Quito, Ecuador</p>
+                <h4><i class="fas fa-envelope"></i> Contacto</h4>
+                <div class="contact-info">
+                    <p><i class="fas fa-envelope"></i> contacto@tuinformacionalinstante.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Quito, Ecuador</p>
+                    <p><i class="fas fa-phone"></i> +593 99 999 9999</p>
+                </div>
             </div>
         </div>
         <div class="footer-bottom">
@@ -83,6 +152,28 @@
         localStorage.clear();
         sessionStorage.clear();
         document.getElementById("year").textContent = new Date().getFullYear();
+        
+        // Animación de números en estadísticas
+        document.addEventListener('DOMContentLoaded', function() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent);
+                if (!isNaN(target)) {
+                    let count = 0;
+                    const duration = 2000;
+                    const increment = target / (duration / 16);
+                    const timer = setInterval(() => {
+                        count += increment;
+                        if (count >= target) {
+                            stat.textContent = target.toLocaleString();
+                            clearInterval(timer);
+                        } else {
+                            stat.textContent = Math.floor(count).toLocaleString();
+                        }
+                    }, 16);
+                }
+            });
+        });
     </script>
 </body>
 
