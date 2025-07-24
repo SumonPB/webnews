@@ -1,49 +1,318 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Registro de Usuario</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario | Tu Información al Instante</title>
     <link rel="stylesheet" th:href="@{/css/style-register.css}">
+    <!-- <link rel="stylesheet" href="../static/css/style-register.css"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
 </head>
+
 <body>
-
-    <div class="register-container">
-        <h2>Crear cuenta</h2>
-
-        <form th:action="@{/InsertClient}" method="get">
-            <div class="input-group">
-                <label for="name"><i class="fas fa-user"></i> Nombre</label>
-                <input type="text" id="name" name="name" placeholder="Nombre Completo" required>
-            </div>
-
-            <div class="input-group">
-                <label for="nickname"><i class="fas fa-user-tag"></i> Usuario</label>
-                <input type="text" id="nickname" name="nickname" placeholder="Nombre de Usuario" required>
-            </div>
-
-            <div class="input-group">
-                <label for="email"><i class="fas fa-envelope"></i> Correo Electrónico</label>
-                <input type="email" id="email" name="email" placeholder="usuario@correo.com" required>
-            </div>
-
-            <div class="input-group">
-                <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
-                <div class="password-wrapper">
-                    <input type="password" id="password" name="password" placeholder="••••••••" required>
-                    <i class="fa-solid fa-eye toggle-password" onclick="togglePassword()"></i>
-                </div>
-            </div>
-
-            <button type="submit">Registrarse</button>
-        </form>
-
-        <div class="login-link">
-            ¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión aquí</a>
+    <div class="register-background">
+        <div class="background-overlay"></div>
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
         </div>
     </div>
 
-    <script th:src="@{/js/script.js}"></script>
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <div class="logo">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h1>Crear Cuenta</h1>
+                <p class="subtitle">Únete a nuestra comunidad de lectores</p>
+            </div>
+
+            <form th:action="@{/InsertClient}" method="post" class="register-form" onsubmit="return validateForm(this)">
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Información Personal</h3>
+
+                    <div class="input-group">
+                        <label for="name">
+                            <i class="fas fa-user"></i>
+                            Nombre Completo
+                            <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="text" id="name" name="name" placeholder="Ingresa tu nombre completo" required
+                                class="form-input">
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <span class="helper-text">Tu nombre será visible para otros usuarios</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="nickname">
+                            <i class="fas fa-user-tag"></i>
+                            Nombre de Usuario
+                            <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="text" id="nickname" name="nickname"
+                                placeholder="Elige un nombre de usuario único" required class="form-input">
+                            <div class="input-icon">
+                                <i class="fas fa-user-tag"></i>
+                            </div>
+                        </div>
+                        <span class="helper-text">Será tu identificador único en la plataforma</span>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-lock"></i> Credenciales de Acceso</h3>
+
+                    <div class="input-group">
+                        <label for="email">
+                            <i class="fas fa-envelope"></i>
+                            Correo Electrónico
+                            <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="email" id="email" name="email" placeholder="Ingresa tu correo electrónico"
+                                required class="form-input">
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                        </div>
+                        <span class="helper-text">Usaremos este correo para confirmar tu cuenta</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i>
+                            Contraseña
+                            <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="password" id="password" name="password"
+                                placeholder="Crea una contraseña segura" required class="form-input password-input">
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <button type="button" class="toggle-password" onclick="togglePassword()">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <span class="helper-text">Mínimo 8 caracteres con letras y números</span>
+                    </div>
+                </div>
+
+                <div class="password-requirements">
+                    <h4><i class="fas fa-shield-alt"></i> Requisitos de seguridad:</h4>
+                    <ul>
+                        <li id="length-req"><i class="fas fa-times"></i> Mínimo 8 caracteres</li>
+                        <li id="uppercase-req"><i class="fas fa-times"></i> Al menos una mayúscula</li>
+                        <li id="lowercase-req"><i class="fas fa-times"></i> Al menos una minúscula</li>
+                        <li id="number-req"><i class="fas fa-times"></i> Al menos un número</li>
+                        <li id="special-req"><i class="fas fa-times"></i> Al menos un carácter especial</li>
+                    </ul>
+                </div>
+
+                <div class="terms-agreement">
+                    <label class="checkbox-container">
+                        <input type="checkbox" required>
+                        <span class="checkmark"></span>
+                        <span class="terms-text">
+                            Acepto los <a href="#" class="terms-link">Términos de Servicio</a> y
+                            <a href="#" class="terms-link">Política de Privacidad</a>
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit" class="register-button">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Crear Cuenta</span>
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>o regístrate con</span>
+            </div>
+
+            <div class="social-register">
+                <button class="social-button google">
+                    <i class="fab fa-google"></i>
+                </button>
+                <button class="social-button facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+                <button class="social-button twitter">
+                    <i class="fab fa-twitter"></i>
+                </button>
+            </div>
+
+            <div class="login-link">
+                <p>¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión aquí</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Validación del formulario
+        function validateForm(form) {
+            const name = form.name.value.trim();
+            const nickname = form.nickname.value.trim();
+            const email = form.email.value.trim();
+            const password = form.password.value;
+
+            // Validaciones básicas
+            if (!name || !nickname || !email || !password) {
+                showError('Por favor, completa todos los campos obligatorios.');
+                return false;
+            }
+
+            if (name.length < 2) {
+                showError('El nombre debe tener al menos 2 caracteres.');
+                return false;
+            }
+
+            if (nickname.length < 3) {
+                showError('El nombre de usuario debe tener al menos 3 caracteres.');
+                return false;
+            }
+
+            if (!isValidEmail(email)) {
+                showError('Por favor, ingresa un correo electrónico válido.');
+                return false;
+            }
+
+            if (!validatePassword(password)) {
+                showError('La contraseña no cumple con los requisitos de seguridad.');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Validación de email
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Validación de contraseña
+        function validatePassword(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            };
+
+            updatePasswordRequirements(requirements);
+            return Object.values(requirements).every(req => req);
+        }
+
+        // Actualizar indicadores de requisitos de contraseña
+        function updatePasswordRequirements(requirements) {
+            const reqs = {
+                'length-req': requirements.length,
+                'uppercase-req': requirements.uppercase,
+                'lowercase-req': requirements.lowercase,
+                'number-req': requirements.number,
+                'special-req': requirements.special
+            };
+
+            Object.keys(reqs).forEach(id => {
+                const element = document.getElementById(id);
+                const icon = element.querySelector('i');
+                if (reqs[id]) {
+                    element.classList.add('valid');
+                    icon.className = 'fas fa-check';
+                } else {
+                    element.classList.remove('valid');
+                    icon.className = 'fas fa-times';
+                }
+            });
+        }
+
+        // Toggle mostrar/ocultar contraseña
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleButton = document.querySelector('.toggle-password');
+            const icon = toggleButton.querySelector('i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        // Mostrar mensajes de error
+        function showError(message) {
+            // Remover alertas existentes
+            const existingAlert = document.querySelector('.alert.error');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+
+            // Crear nueva alerta
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert error';
+            errorDiv.innerHTML = `
+                <i class="fas fa-exclamation-circle"></i>
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+            `;
+
+            const form = document.querySelector('.register-form');
+            form.parentNode.insertBefore(errorDiv, form.nextSibling);
+
+            // Auto eliminar después de 5 segundos
+            setTimeout(() => {
+                if (errorDiv.parentElement) {
+                    errorDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function () {
+            // Validación en tiempo real de contraseña
+            const passwordInput = document.getElementById('password');
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function () {
+                    if (this.value) {
+                        validatePassword(this.value);
+                    } else {
+                        // Resetear requisitos si está vacío
+                        updatePasswordRequirements({
+                            length: false,
+                            uppercase: false,
+                            lowercase: false,
+                            number: false,
+                            special: false
+                        });
+                    }
+                });
+            }
+
+            // Animación de entrada
+            const registerCard = document.querySelector('.register-card');
+            registerCard.style.opacity = '0';
+            registerCard.style.transform = 'translateY(30px)';
+
+            setTimeout(() => {
+                registerCard.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                registerCard.style.opacity = '1';
+                registerCard.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
 </body>
 </html>

@@ -1,26 +1,286 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <title>Configurar Perfil</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurar Perfil | Tu Información al Instante</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style-configureProfile.css}">
+    <!-- <link rel="stylesheet" href="../static/css/style-configureProfile.css"> -->
 </head>
 <body>
-    <h2>Configurar Perfil</h2>
-    
-<form action="/updateClient" method="post">
-    <label>Nombre:</label>
-    <input type="text" name="name" th:value="${client.name}" required />
+    <div class="container">
+        <header class="page-header">
+            <div class="header-content">
+                <h1><i class="fas fa-user-cog"></i> Configurar Perfil</h1>
+                <p class="header-subtitle">Actualiza tu información personal y mantén tu cuenta segura</p>
+            </div>
+            <div class="profile-preview">
+                <div class="avatar-placeholder">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="profile-info">
+                    <h3 th:text="${client != null ? client.name : 'Usuario'}">Nombre del Usuario</h3>
+                    <p class="profile-email" th:text="${client != null ? client.email : ''}">correo@ejemplo.com</p>
+                    <span class="profile-status">Miembro</span>
+                </div>
+            </div>
+        </header>
 
-    <label>Apodo:</label>
-    <input type="text" name="nickname" th:value="${client.nickname}" required />
+        <main class="main-content">
+            <div class="profile-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-edit"></i> Información Personal</h2>
+                    <p>Completa todos los campos obligatorios para actualizar tu perfil</p>
+                </div>
 
-    <label>Contraseña:</label>
-    <input type="password" name="password"/><br>
+                <form action="/updateClient" method="post" class="profile-form" onsubmit="return validateForm(this)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">
+                                <i class="fas fa-user"></i>
+                                Nombre Completo
+                                <span class="required">*</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="text" 
+                                       id="name" 
+                                       name="name" 
+                                       th:value="${client != null ? client.name : ''}" 
+                                       required 
+                                       placeholder="Ingresa tu nombre completo"
+                                       class="form-input">
+                                <div class="input-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                            <span class="helper-text">Tu nombre será visible para otros usuarios</span>
+                        </div>
 
-    <button type="submit">Actualizar</button>
-</form>
+                        <div class="form-group">
+                            <label for="nickname">
+                                <i class="fas fa-at"></i>
+                                Apodo/Nickname
+                                <span class="required">*</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="text" 
+                                       id="nickname" 
+                                       name="nickname" 
+                                       th:value="${client != null ? client.nickname : ''}" 
+                                       required 
+                                       placeholder="Ingresa tu apodo"
+                                       class="form-input">
+                                <div class="input-icon">
+                                    <i class="fas fa-at"></i>
+                                </div>
+                            </div>
+                            <span class="helper-text">Este será tu nombre de usuario</span>
+                        </div>
 
+                        <div class="form-group">
+                            <label for="email">
+                                <i class="fas fa-envelope"></i>
+                                Correo Electrónico
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="email" 
+                                       id="email" 
+                                       name="email" 
+                                       th:value="${client != null ? client.email : ''}" 
+                                       readonly
+                                       class="form-input readonly">
+                                <div class="input-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                            </div>
+                            <span class="helper-text">No se puede modificar el correo electrónico</span>
+                        </div>
 
-    <br>
-    <a href="/user"><button>Volver</button></a>
+                        <div class="form-group">
+                            <label for="password">
+                                <i class="fas fa-lock"></i>
+                                Nueva Contraseña
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="password" 
+                                       id="password" 
+                                       name="password" 
+                                       placeholder="Ingresa una nueva contraseña"
+                                       class="form-input password-input">
+                                <div class="input-icon">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <span class="helper-text">Deja en blanco para mantener la contraseña actual</span>
+                        </div>
+                    </div>
+
+                    <div class="password-requirements">
+                        <h4><i class="fas fa-shield-alt"></i> Requisitos de contraseña:</h4>
+                        <ul>
+                            <li id="length-req"><i class="fas fa-times"></i> Mínimo 8 caracteres</li>
+                            <li id="uppercase-req"><i class="fas fa-times"></i> Al menos una mayúscula</li>
+                            <li id="lowercase-req"><i class="fas fa-times"></i> Al menos una minúscula</li>
+                            <li id="number-req"><i class="fas fa-times"></i> Al menos un número</li>
+                        </ul>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-save"></i>
+                            <span>Actualizar Perfil</span>
+                        </button>
+                        
+                        <a href="/user" class="back-button">
+                            <i class="fas fa-arrow-left"></i>
+                            <span>Volver</span>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Validación del formulario
+        function validateForm(form) {
+            const name = form.name.value.trim();
+            const nickname = form.nickname.value.trim();
+            
+            if (!name || !nickname) {
+                showError('Por favor, completa todos los campos obligatorios.');
+                return false;
+            }
+            
+            if (name.length < 2) {
+                showError('El nombre debe tener al menos 2 caracteres.');
+                return false;
+            }
+            
+            if (nickname.length < 3) {
+                showError('El apodo debe tener al menos 3 caracteres.');
+                return false;
+            }
+            
+            const password = form.password.value;
+            if (password && !validatePassword(password)) {
+                showError('La contraseña no cumple con los requisitos mínimos.');
+                return false;
+            }
+            
+            showSuccess('¡Perfil actualizado correctamente!');
+            return true;
+        }
+
+        // Validación de contraseña
+        function validatePassword(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password)
+            };
+            
+            updatePasswordRequirements(requirements);
+            return Object.values(requirements).every(req => req);
+        }
+
+        // Actualizar indicadores de requisitos de contraseña
+        function updatePasswordRequirements(requirements) {
+            const reqs = {
+                'length-req': requirements.length,
+                'uppercase-req': requirements.uppercase,
+                'lowercase-req': requirements.lowercase,
+                'number-req': requirements.number
+            };
+            
+            Object.keys(reqs).forEach(id => {
+                const element = document.getElementById(id);
+                const icon = element.querySelector('i');
+                if (reqs[id]) {
+                    element.classList.add('valid');
+                    icon.className = 'fas fa-check';
+                } else {
+                    element.classList.remove('valid');
+                    icon.className = 'fas fa-times';
+                }
+            });
+        }
+
+        // Toggle mostrar/ocultar contraseña
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const button = input.nextElementSibling.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        // Mostrar mensajes de error
+        function showError(message) {
+            removeAlerts();
+            const alertDiv = createAlert('error', message);
+            document.querySelector('.main-content').insertBefore(alertDiv, document.querySelector('.profile-section'));
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        // Mostrar mensajes de éxito
+        function showSuccess(message) {
+            removeAlerts();
+            const alertDiv = createAlert('success', message);
+            document.querySelector('.main-content').insertBefore(alertDiv, document.querySelector('.profile-section'));
+            setTimeout(() => alertDiv.remove(), 3000);
+        }
+
+        // Crear elemento de alerta
+        function createAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert ${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+            `;
+            return alertDiv;
+        }
+
+        // Remover alertas existentes
+        function removeAlerts() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => alert.remove());
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Validación en tiempo real de contraseña
+            const passwordInput = document.getElementById('password');
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function() {
+                    if (this.value) {
+                        validatePassword(this.value);
+                    } else {
+                        // Resetear requisitos si está vacío
+                        updatePasswordRequirements({
+                            length: false,
+                            uppercase: false,
+                            lowercase: false,
+                            number: false
+                        });
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

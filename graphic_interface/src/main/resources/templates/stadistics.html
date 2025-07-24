@@ -1,136 +1,313 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Estadísticas de Subscripciones</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas de Subscripciones | Panel de Administrador</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style-stadistics.css}">
+    <!-- <link rel="stylesheet" href="../static/css/style-stadistics.css"> -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            padding: 20px;
-            text-align: center;
-        }
-        h2 {
-            margin-bottom: 30px;
-            color: #333;
-        }
-        canvas {
-            margin: 30px auto;
-            max-width: 600px;
-            display: block;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 8px;
-        }
-    </style>
 </head>
+
 <body>
+    <div class="container">
+        <div class="page-header">
+            <div class="header-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h1>Estadísticas de Subscripciones</h1>
+            <p class="header-subtitle">Análisis detallado del rendimiento de subscripciones y facturación</p>
+        </div>
 
-<h2>Estadísticas de Facturación</h2>
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="stat-number" id="totalBills">0</div>
+                <div class="stat-label">Facturas Totales</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-number" id="totalRevenue">$0</div>
+                <div class="stat-label">Ingresos Totales</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-number" id="activeSubs">0</div>
+                <div class="stat-label">Subs Activas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="stat-number" id="monthsCount">0</div>
+                <div class="stat-label">Meses Analizados</div>
+            </div>
+        </div>
 
-<canvas id="subscripcionesPorMes" width="400" height="200"></canvas>
-<canvas id="subscripcionesPorTipo" width="400" height="200"></canvas>
-<canvas id="gananciasTotales" width="400" height="200"></canvas>
-<canvas id="subsActivas" width="400" height="200"></canvas>
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Cargando estadísticas...</p>
+        </div>
 
-<script>
-    async function fetchData() {
-        const response = await fetch('/getAllBills');
+        <div class="full-width-chart" id="chart1Container" style="display: none;">
+            <div class="chart-header">
+                <h3><i class="fas fa-calendar"></i> Subscripciones por Mes</h3>
+                <p>Tendencia de crecimiento mensual</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="subscripcionesPorMes"></canvas>
+            </div>
+        </div>
 
+        <div class="charts-container">
+            <div class="chart-card" id="chart2Container" style="display: none;">
+                <div class="chart-header">
+                    <h3><i class="fas fa-tags"></i> Subscripciones por Tipo</h3>
+                    <p>Distribución por categorías de subscripción</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="subscripcionesPorTipo"></canvas>
+                </div>
+            </div>
 
-        const bills = await response.json();
+            <div class="chart-card" id="chart3Container" style="display: none;">
+                <div class="chart-header">
+                    <h3><i class="fas fa-trophy"></i> Ganancias Totales</h3>
+                    <p>Ingresos acumulados por subscripciones</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="gananciasTotales"></canvas>
+                </div>
+            </div>
 
-        const now = new Date();
-        const porMes = {};
-        const porTipo = {};
-        let totalGanancias = 0;
-        let activas = 0;
+            <div class="chart-card" id="chart4Container" style="display: none;">
+                <div class="chart-header">
+                    <h3><i class="fas fa-power-off"></i> Estado de Subscripciones</h3>
+                    <p>Activas vs Inactivas</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="subsActivas"></canvas>
+                </div>
+            </div>
+        </div>
 
-        bills.forEach(bill => {
-            const start = new Date(bill.startSubscription);
-            const end = new Date(bill.endSubscription);
+        <div class="action-button">
+            <a href="/admin" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                <span>Volver al Panel</span>
+            </a>
+        </div>
+    </div>
 
-            const mes = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}`;
-            porMes[mes] = (porMes[mes] || 0) + 1;
+    <script>
+        async function fetchData() {
+            try {
+                const response = await fetch('/getAllBills');
 
-            porTipo[bill.subscriptionName] = (porTipo[bill.subscriptionName] || 0) + 1;
+                if (!response.ok) {
+                    throw new Error('Error al obtener los datos');
+                }
 
+                const bills = await response.json();
 
-            totalGanancias += bill.amount || 0;
+                // Actualizar estadísticas generales
+                document.getElementById('totalBills').textContent = bills.length;
 
-            if (end > now) {
-                activas++;
+                const now = new Date();
+                const porMes = {};
+                const porTipo = {};
+                let totalGanancias = 0;
+                let activas = 0;
+                const monthsSet = new Set();
+
+                bills.forEach(bill => {
+                    const start = new Date(bill.startSubscription);
+                    const end = new Date(bill.endSubscription);
+
+                    const mes = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}`;
+                    porMes[mes] = (porMes[mes] || 0) + 1;
+                    monthsSet.add(mes);
+
+                    porTipo[bill.subscriptionName] = (porTipo[bill.subscriptionName] || 0) + 1;
+
+                    totalGanancias += bill.amount || 0;
+
+                    if (end > now) {
+                        activas++;
+                    }
+                });
+
+                // Formatear ingresos totales
+                document.getElementById('totalRevenue').textContent = `$${totalGanancias.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                document.getElementById('activeSubs').textContent = activas;
+                document.getElementById('monthsCount').textContent = monthsSet.size;
+
+                // Ordenar meses cronológicamente
+                const mesesOrdenados = Object.keys(porMes).sort();
+                const valoresPorMes = mesesOrdenados.map(mes => porMes[mes]);
+
+                // Mostrar contenedores de gráficos
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('chart1Container').style.display = 'block';
+                document.getElementById('chart2Container').style.display = 'block';
+                document.getElementById('chart3Container').style.display = 'block';
+                document.getElementById('chart4Container').style.display = 'block';
+
+                // Subscripciones por mes
+                new Chart(document.getElementById('subscripcionesPorMes'), {
+                    type: 'line',
+                    data: {
+                        labels: mesesOrdenados,
+                        datasets: [{
+                            label: 'Subscripciones por Mes',
+                            data: valoresPorMes,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#3b82f6',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Subscripciones por tipo
+                const tipos = Object.keys(porTipo);
+                const valoresTipos = tipos.map(tipo => porTipo[tipo]);
+                const colores = [
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 206, 86, 0.8)',
+                    'rgba(75, 192, 192, 0.8)',
+                    'rgba(153, 102, 255, 0.8)',
+                    'rgba(255, 159, 64, 0.8)'
+                ];
+
+                new Chart(document.getElementById('subscripcionesPorTipo'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: tipos,
+                        datasets: [{
+                            label: 'Subscripciones por Tipo',
+                            data: valoresTipos,
+                            backgroundColor: colores.slice(0, tipos.length),
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            }
+                        }
+                    }
+                });
+
+                // Ganancias Totales
+                new Chart(document.getElementById('gananciasTotales'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Total'],
+                        datasets: [{
+                            label: 'Ganancias Totales ($)',
+                            data: [totalGanancias],
+                            backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    callback: function (value) {
+                                        return '$' + value.toLocaleString('es-ES');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Subscripciones Activas
+                new Chart(document.getElementById('subsActivas'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Activas', 'Inactivas'],
+                        datasets: [{
+                            data: [activas, bills.length - activas],
+                            backgroundColor: [
+                                'rgba(16, 185, 129, 0.8)',
+                                'rgba(201, 203, 207, 0.8)'
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            }
+                        }
+                    }
+                });
+
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').innerHTML = `
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Error al cargar las estadísticas. Por favor, intente nuevamente.</p>
+                `;
             }
+        }
+
+        // Inicializar cuando el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchData();
         });
-
-        // Subscripciones por mes
-        new Chart(document.getElementById('subscripcionesPorMes'), {
-            type: 'bar',
-            data: {
-                labels: Object.keys(porMes),
-                datasets: [{
-                    label: 'Subscripciones por Mes',
-                    data: Object.values(porMes),
-                    backgroundColor: 'rgba(54, 162, 235, 0.7)'
-                }]
-            }
-        });
-
-        // Subscripciones por tipo
-        new Chart(document.getElementById('subscripcionesPorTipo'), {
-            type: 'pie',
-            data: {
-                labels: Object.keys(porTipo),
-                datasets: [{
-                    label: 'Subscripciones por Tipo',
-                    data: Object.values(porTipo),
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.6)',
-                        'rgba(255, 206, 86, 0.6)',
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(153, 102, 255, 0.6)'
-                    ]
-                }]
-            }
-        });
-
-        // Ganancias Totales
-        new Chart(document.getElementById('gananciasTotales'), {
-            type: 'bar',
-            data: {
-                labels: ['Total'],
-                datasets: [{
-                    label: 'Ganancias Totales ($)',
-                    data: [totalGanancias],
-                    backgroundColor: 'rgba(75, 192, 192, 0.7)'
-                }]
-            },
-            options: {
-                indexAxis: 'y'
-            }
-        });
-
-        // Subscripciones Activas
-        new Chart(document.getElementById('subsActivas'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Activas', 'Inactivas'],
-                datasets: [{
-                    data: [activas, bills.length - activas],
-                    backgroundColor: [
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(201, 203, 207, 0.6)'
-                    ]
-                }]
-            }
-        });
-    }
-
-    fetchData();
-</script>
-<a href="/admin"><button>Volver al Inicio</button></a>
-
+    </script>
 </body>
 </html>

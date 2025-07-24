@@ -1,112 +1,249 @@
 :root {
     --primary: #1e3a8a;
+    --primary-dark: #1e3a8a;
     --accent: #2563eb;
+    --accent-hover: #1d4ed8;
     --bg: #f9fafb;
     --card-bg: #ffffff;
     --text: #111827;
-    --muted: #6b7280;
+    --text-light: #6b7280;
     --border: #e5e7eb;
     --badge: linear-gradient(to right, #2563eb, #3b82f6);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(37, 99, 235, 0.2);
+    --shadow-lg: 0 6px 16px rgba(37, 99, 235, 0.3);
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
     margin: 0;
     padding: 2rem;
     font-family: 'Poppins', sans-serif;
-    background-color: var(--bg);
+    background: linear-gradient(135deg, #f0f9ff 0%, #f9fafb 100%);
     color: var(--text);
+    min-height: 100vh;
+    animation: fadeIn 0.8s ease-in-out;
 }
 
-h2 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
+/* Header */
+header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+}
+
+header h2 {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 600;
+}
+
+header h2 i {
+    margin-right: 1rem;
+}
+
+/* Botones */
 .buttons {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     margin-bottom: 2rem;
+    justify-content: center;
 }
 
 .buttons a {
     text-decoration: none;
+    flex: 1;
+    min-width: 200px;
 }
 
 .buttons button {
-    background: var(--accent);
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
     color: #fff;
-    padding: 0.7rem 1.5rem;
+    padding: 1rem 1.5rem;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 1rem;
     cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .buttons button:hover {
-    background: #1d4ed8;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, var(--accent-hover) 0%, var(--primary-dark) 100%);
 }
 
+.buttons button:active {
+    transform: translateY(-1px);
+}
+
+/* Títulos */
 h3 {
-    font-size: 1.5rem;
-    margin-top: 3rem;
-    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    margin: 3rem 0 2rem 0;
     color: var(--primary);
+    text-align: center;
+    font-weight: 600;
 }
 
+h3 i {
+    margin-right: 0.8rem;
+}
+
+/* Grid de Noticias */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+/* Tarjetas de Noticias */
 .news-item {
     background: var(--card-bg);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border-radius: 16px;
+    padding: 1.8rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.news-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--accent), var(--primary));
+}
+
+.news-item:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent);
 }
 
 .news-id {
-    font-size: 0.85rem;
-    color: var(--muted);
-    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
 }
 
 .news-title {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     color: var(--primary);
+    line-height: 1.3;
 }
 
 .news-author,
 .news-category {
-    font-size: 0.9rem;
-    margin-bottom: 0.3rem;
-    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-light);
 }
 
 .news-category span {
     display: inline-block;
     background: var(--badge);
     color: white;
-    padding: 0.25rem 0.75rem;
+    padding: 0.35rem 1rem;
     border-radius: 999px;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 600;
+    margin-top: 0.5rem;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
 }
 
 p {
-    margin-top: 0.5rem;
+    margin-top: 1rem;
+    line-height: 1.6;
+    color: var(--text);
+    font-size: 0.95rem;
 }
 
+/* Footer */
+footer {
+    text-align: center;
+    color: var(--text-light);
+    padding: 2rem;
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+    
+    header {
+        padding: 1.5rem;
+    }
+    
+    header h2 {
+        font-size: 1.8rem;
+    }
+    
     .buttons {
         flex-direction: column;
     }
+    
+    .buttons a {
+        min-width: 100%;
+    }
+    
+    .news-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .news-item {
+        padding: 1.5rem;
+    }
+    
+    h3 {
+        font-size: 1.5rem;
+    }
+}
 
-    .buttons button {
-        width: 100%;
+@media (max-width: 480px) {
+    header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .news-item {
+        padding: 1.2rem;
+    }
+    
+    .news-title {
+        font-size: 1.2rem;
     }
 }

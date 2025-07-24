@@ -3,27 +3,32 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administrador</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style-admin.css}">
+    <!-- <link rel="stylesheet" href="../static/css/style-admin.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 
-    <h2>Bienvenido Administrador</h2>
+    <header>
+        <h2><i class="fas fa-user-shield"></i> Bienvenido Administrador</h2>
+    </header>
 
     <div class="buttons">
-        <a th:href="@{/logout}"><button>Salir</button></a>
-        <a th:href="@{/admin/news/create}"><button>Ingresar Noticias</button></a>
-        <a th:href="@{/admin/news/edit}"><button>Modificar Noticias</button></a>
-        <a th:href="@{/admin/user/edit}"><button>Modificar Cliente</button></a>
-        <a th:href="@{/admin/stadistics}"><button>Historial de Subscripciones</button></a>
+        <a th:href="@{/logout}"><button><i class="fas fa-sign-out-alt"></i> Salir</button></a>
+        <a th:href="@{/admin/news/create}"><button><i class="fas fa-plus-circle"></i> Ingresar Noticias</button></a>
+        <a th:href="@{/admin/news/edit}"><button><i class="fas fa-edit"></i> Modificar Noticias</button></a>
+        <a th:href="@{/admin/user/edit}"><button><i class="fas fa-user-edit"></i> Modificar Cliente</button></a>
+        <a th:href="@{/admin/stadistics}"><button><i class="fas fa-chart-line"></i> Historial de Subscripciones</button></a>
     </div>
 
-    <h3>Noticias Recomendadas</h3>
+    <h3><i class="fas fa-newspaper"></i> Noticias Recomendadas</h3>
 
-    <div th:each="news : ${news}">
-        <div class="news-item">
+    <div class="news-grid">
+        <div th:each="news : ${news}" class="news-item">
             <div class="news-id">ID: <span th:text="${news.id}">1</span></div>
             <div class="news-title" th:text="${news.title}">Título</div>
             <div class="news-author">Autor: <span th:text="${news.author}">Nombre Autor</span></div>
@@ -31,6 +36,16 @@
             <p th:text="${news.content}">Contenido de la noticia...</p>
         </div>
     </div>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Tu Información al Instante. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        localStorage.clear();
+        sessionStorage.clear();
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
 
 </body>
 

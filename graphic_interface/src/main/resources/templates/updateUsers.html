@@ -1,37 +1,412 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <title>Modificar Cliente</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar Cliente | Panel de Administrador</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style-updateCli.css}">
+    <!-- <link rel="stylesheet" href="../static/css/style-updateCli.css"> -->
 </head>
 <body>
-<h2>Modificar Usuario</h2>
+    <div class="container">
+        <div class="client-card">
+            <div class="card-header">
+                <div class="header-icon">
+                    <i class="fas fa-user-edit"></i>
+                </div>
+                <h1>Modificar Cliente</h1>
+                <p class="header-subtitle">Actualiza la información del cliente seleccionado</p>
+            </div>
 
-<form action="/updateCli" method="post">
-    <label for="email">Email del Cliente (requerido):</label><br>
-    <input type="email" id="email" name="email" required><br><br>
+            <div class="search-section">
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i>
+                        Email del Cliente
+                        <span class="required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input type="email" 
+                               id="email" 
+                               name="email" 
+                               required 
+                               placeholder="Ingresa el email del cliente a modificar"
+                               class="form-input">
+                        <div class="input-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <button type="button" class="search-button" onclick="searchClient()">
+                            <i class="fas fa-search"></i>
+                            <span>Buscar</span>
+                        </button>
+                    </div>
+                    <span class="helper-text">Ingresa el email para cargar los datos del cliente</span>
+                </div>
+                
+                <div class="client-info" id="clientInfo" style="display: none;">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <i class="fas fa-user"></i>
+                            <div>
+                                <span class="info-label">Nombre Actual:</span>
+                                <span class="info-value" id="currentName">-</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-at"></i>
+                            <div>
+                                <span class="info-label">Apodo Actual:</span>
+                                <span class="info-value" id="currentNickname">-</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-crown"></i>
+                            <div>
+                                <span class="info-label">Suscripción Actual:</span>
+                                <span class="info-value" id="currentSubscription">-</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-calendar"></i>
+                            <div>
+                                <span class="info-label">Fecha de Registro:</span>
+                                <span class="info-value" id="currentDate">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <label for="name">Nuevo Nombre:</label><br>
-    <input type="text" id="name" name="name"><br><br>
+            <form action="/updateCli" method="post" class="client-form" id="clientForm" style="display: none;" onsubmit="return validateForm(this)">
+                <input type="hidden" id="clientEmail" name="email">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">
+                            <i class="fas fa-user"></i>
+                            Nuevo Nombre
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="text" 
+                                   id="name" 
+                                   name="name" 
+                                   placeholder="Ingresa el nuevo nombre"
+                                   class="form-input">
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <span class="helper-text">Nombre completo del cliente</span>
+                    </div>
 
-    <label for="nickname">Nuevo Apodo:</label><br>
-    <input type="text" id="nickname" name="nickname"><br><br>
+                    <div class="form-group">
+                        <label for="nickname">
+                            <i class="fas fa-at"></i>
+                            Nuevo Apodo
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="text" 
+                                   id="nickname" 
+                                   name="nickname" 
+                                   placeholder="Ingresa el nuevo apodo"
+                                   class="form-input">
+                            <div class="input-icon">
+                                <i class="fas fa-at"></i>
+                            </div>
+                        </div>
+                        <span class="helper-text">Nombre de usuario único</span>
+                    </div>
 
-    <label for="password">Nueva Contraseña:</label><br>
-    <input type="password" id="password" name="password"><br><br>
+                    <div class="form-group">
+                        <label for="newPassword">
+                            <i class="fas fa-lock"></i>
+                            Nueva Contraseña
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="password" 
+                                   id="newPassword" 
+                                   name="password" 
+                                   placeholder="Ingresa una nueva contraseña"
+                                   class="form-input password-input">
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <button type="button" class="toggle-password" onclick="togglePassword('newPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <span class="helper-text">Deja en blanco para mantener la contraseña actual</span>
+                    </div>
 
-    <label for="subscriptionName">Suscripción:</label><br>
-    <select id="subscriptionName" name="subscriptionName">
-        <option value="">--Seleccionar--</option>
-        <option value="FREE">FREE</option>
-        <option value="TITULAR">TITULAR</option>
-        <option value="REDACCIONPlus">REDACCIONPlus</option>
-        <option value="INSIDER">INSIDER</option>
-    </select><br><br>
+                    <div class="form-group">
+                        <label for="subscriptionName">
+                            <i class="fas fa-crown"></i>
+                            Tipo de Suscripción
+                        </label>
+                        <div class="select-wrapper">
+                            <select id="subscriptionName" name="subscriptionName" class="form-select">
+                                <option value="">--Seleccionar--</option>
+                                <option value="FREE">FREE - Acceso público</option>
+                                <option value="TITULAR">TITULAR - Suscripción básica</option>
+                                <option value="REDACCIONPlus">REDACCIÓN Plus - Suscripción premium</option>
+                                <option value="INSIDER">INSIDER - Acceso exclusivo</option>
+                            </select>
+                            <div class="select-icon">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <span class="helper-text">Nivel de acceso del cliente</span>
+                    </div>
+                </div>
 
-    <button type="submit">Guardar Cambios</button>
-</form>
+                <div class="password-requirements">
+                    <h4><i class="fas fa-shield-alt"></i> Requisitos de contraseña (opcional):</h4>
+                    <ul>
+                        <li id="length-req"><i class="fas fa-times"></i> Mínimo 8 caracteres</li>
+                        <li id="uppercase-req"><i class="fas fa-times"></i> Al menos una mayúscula</li>
+                        <li id="lowercase-req"><i class="fas fa-times"></i> Al menos una minúscula</li>
+                        <li id="number-req"><i class="fas fa-times"></i> Al menos un número</li>
+                    </ul>
+                </div>
 
-<br>
-<a href="/admin"><button>Volver</button></a>
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-save"></i>
+                        <span>Guardar Cambios</span>
+                    </button>
+                    
+                    <button type="button" class="reset-btn" onclick="resetForm()">
+                        <i class="fas fa-undo"></i>
+                        <span>Limpiar Formulario</span>
+                    </button>
+                    
+                    <a href="/admin" class="back-button">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Volver al Panel</span>
+                    </a>
+                </div>
+            </form>
+
+            <div class="loading" id="loading" style="display: none;">
+                <i class="fas fa-spinner"></i>
+                <p>Buscando cliente...</p>
+            </div>
+
+            <div class="no-results" id="noResults" style="display: none;">
+                <i class="fas fa-user"></i>
+                <h3>No se encontró el cliente</h3>
+                <p>Verifica que el email ingresado sea correcto e inténtalo nuevamente.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Buscar cliente por email
+        async function searchClient() {
+            const emailInput = document.getElementById('email');
+            const clientEmail = emailInput.value.trim();
+            
+            if (!clientEmail) {
+                showError('Por favor, ingresa un email de cliente.');
+                return;
+            }
+            
+            if (!isValidEmail(clientEmail)) {
+                showError('Por favor, ingresa un email válido.');
+                return;
+            }
+            
+            // Mostrar loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('clientForm').style.display = 'none';
+            document.getElementById('noResults').style.display = 'none';
+            document.getElementById('clientInfo').style.display = 'none';
+            
+            try {
+                // Simular llamada a API (reemplazar con tu endpoint real)
+                const response = await fetch(`/api/client/${encodeURIComponent(clientEmail)}`);
+                
+                if (response.ok) {
+                    const client = await response.json();
+                    
+                    // Llenar formulario con datos
+                    document.getElementById('clientEmail').value = client.email;
+                    document.getElementById('name').value = client.name || '';
+                    document.getElementById('nickname').value = client.nickname || '';
+                    document.getElementById('subscriptionName').value = client.subscriptionName || '';
+                    
+                    // Actualizar información del cliente
+                    document.getElementById('currentName').textContent = client.name || 'No disponible';
+                    document.getElementById('currentNickname').textContent = client.nickname || 'No disponible';
+                    document.getElementById('currentSubscription').textContent = client.subscriptionName || 'No disponible';
+                    document.getElementById('currentDate').textContent = client.registrationDate ? new Date(client.registrationDate).toLocaleDateString('es-ES') : 'Fecha no disponible';
+                    
+                    // Mostrar información y formulario
+                    document.getElementById('clientInfo').style.display = 'block';
+                    document.getElementById('clientForm').style.display = 'block';
+                } else {
+                    document.getElementById('noResults').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('noResults').style.display = 'block';
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Validación del formulario
+        function validateForm(form) {
+            const name = form.name.value.trim();
+            const nickname = form.nickname.value.trim();
+            const password = form.password.value;
+            
+            if (name && name.length < 2) {
+                showError('El nombre debe tener al menos 2 caracteres.');
+                return false;
+            }
+            
+            if (nickname && nickname.length < 3) {
+                showError('El apodo debe tener al menos 3 caracteres.');
+                return false;
+            }
+            
+            if (password && !validatePassword(password)) {
+                showError('La contraseña no cumple con los requisitos mínimos.');
+                return false;
+            }
+            
+            showSuccess('¡Cliente actualizado correctamente!');
+            return true;
+        }
+
+        // Validación de email
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Validación de contraseña
+        function validatePassword(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password)
+            };
+            
+            updatePasswordRequirements(requirements);
+            return Object.values(requirements).every(req => req);
+        }
+
+        // Actualizar indicadores de requisitos de contraseña
+        function updatePasswordRequirements(requirements) {
+            const reqs = {
+                'length-req': requirements.length,
+                'uppercase-req': requirements.uppercase,
+                'lowercase-req': requirements.lowercase,
+                'number-req': requirements.number
+            };
+            
+            Object.keys(reqs).forEach(id => {
+                const element = document.getElementById(id);
+                const icon = element.querySelector('i');
+                if (reqs[id]) {
+                    element.classList.add('valid');
+                    icon.className = 'fas fa-check';
+                } else {
+                    element.classList.remove('valid');
+                    icon.className = 'fas fa-times';
+                }
+            });
+        }
+
+        // Toggle mostrar/ocultar contraseña
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const button = input.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        // Limpiar formulario
+        function resetForm() {
+            document.getElementById('clientForm').reset();
+            document.getElementById('newPassword').type = 'password';
+            document.querySelector('.toggle-password i').className = 'fas fa-eye';
+            
+            // Resetear requisitos de contraseña
+            updatePasswordRequirements({
+                length: false,
+                uppercase: false,
+                lowercase: false,
+                number: false
+            });
+        }
+
+        // Mostrar mensajes de error
+        function showError(message) {
+            removeAlerts();
+            const alertDiv = createAlert('error', message);
+            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.client-card'));
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        // Mostrar mensajes de éxito
+        function showSuccess(message) {
+            removeAlerts();
+            const alertDiv = createAlert('success', message);
+            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.client-card'));
+            setTimeout(() => alertDiv.remove(), 3000);
+        }
+
+        // Crear elemento de alerta
+        function createAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert ${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+            `;
+            return alertDiv;
+        }
+
+        // Remover alertas existentes
+        function removeAlerts() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => alert.remove());
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Validación en tiempo real de contraseña
+            const passwordInput = document.getElementById('newPassword');
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function() {
+                    if (this.value) {
+                        validatePassword(this.value);
+                    } else {
+                        // Resetear requisitos si está vacío
+                        updatePasswordRequirements({
+                            length: false,
+                            uppercase: false,
+                            lowercase: false,
+                            number: false
+                        });
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
