@@ -1,28 +1,301 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <title>Crear Administrador</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Administrador | Panel de Control</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style-createAdmin.css}">
+    <!-- <link rel="stylesheet" href="../static/css/style-createAdmin.css"> -->
 </head>
 <body>
-    <h2>Crear Nuevo Administrador</h2>
+    <div class="container">
+        <div class="admin-card">
+            <div class="card-header">
+                <div class="header-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h1>Crear Nuevo Administrador</h1>
+                <p class="header-subtitle">Completa la información para crear una cuenta de administrador</p>
+            </div>
 
-    <form action="#" th:action="@{/InsertAdmin}" method="post">
-        <label for="name">Nombre:</label>
-        <input type="text" id="name" name="name" required><br><br>
+            <div class="security-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>Nivel de acceso: Administrador</span>
+            </div>
 
-        <label for="nickname">Usuario:</label>
-        <input type="text" id="nickname" name="nickname" required><br><br>
+            <form action="#" th:action="@{/InsertAdmin}" method="post" class="admin-form" onsubmit="return validateForm(this)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">
+                            <i class="fas fa-user"></i>
+                            Nombre Completo
+                            <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="text" 
+                                   id="name" 
+                                   name="name" 
+                                   required 
+                                   placeholder="Ingresa el nombre completo"
+                                   class="form-input">
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <span class="helper-text">Nombre y apellidos del administrador</span>
+                    </div>
 
-        <label for="email">Correo electrónico:</label>
-        <input type="email" id="email" name="email" required><br><br>
+                    <div class="form-group">
+                        <label for="nickname">
+                            <i class="fas fa-at"></i>
+                            Nombre de Usuario
+                            <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="text" 
+                                   id="nickname" 
+                                   name="nickname" 
+                                   required 
+                                   placeholder="Ingresa el nombre de usuario"
+                                   class="form-input">
+                            <div class="input-icon">
+                                <i class="fas fa-at"></i>
+                            </div>
+                        </div>
+                        <span class="helper-text">Será usado para iniciar sesión</span>
+                    </div>
 
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" required><br><br>
+                    <div class="form-group">
+                        <label for="email">
+                            <i class="fas fa-envelope"></i>
+                            Correo Electrónico
+                            <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="email" 
+                                   id="email" 
+                                   name="email" 
+                                   required 
+                                   placeholder="Ingresa el correo electrónico"
+                                   class="form-input">
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                        </div>
+                        <span class="helper-text">Correo institucional del administrador</span>
+                    </div>
 
-        <button type="submit">Crear Administrador</button>
-    </form>
+                    <div class="form-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i>
+                            Contraseña
+                            <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="password" 
+                                   id="password" 
+                                   name="password" 
+                                   required 
+                                   placeholder="Ingresa contraseña segura"
+                                   class="form-input password-input">
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <span class="helper-text">Mínimo 8 caracteres con números y letras</span>
+                    </div>
+                </div>
 
-    <a href="/login"><button type="button">Volver al login</button></a>
+                <div class="password-requirements">
+                    <h4><i class="fas fa-key"></i> Requisitos de seguridad:</h4>
+                    <ul>
+                        <li id="length-req"><i class="fas fa-times"></i> Mínimo 8 caracteres</li>
+                        <li id="uppercase-req"><i class="fas fa-times"></i> Al menos una mayúscula</li>
+                        <li id="lowercase-req"><i class="fas fa-times"></i> Al menos una minúscula</li>
+                        <li id="number-req"><i class="fas fa-times"></i> Al menos un número</li>
+                        <li id="special-req"><i class="fas fa-times"></i> Al menos un carácter especial</li>
+                    </ul>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Crear Administrador</span>
+                    </button>
+                    
+                    <a href="/login" class="back-button">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Volver al Login</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="admin-info">
+            <div class="info-card">
+                <i class="fas fa-info-circle"></i>
+                <h3>Información Importante</h3>
+                <p>Los administradores tienen acceso completo al sistema. Asegúrate de otorgar este privilegio solo a personal autorizado.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Validación del formulario
+        function validateForm(form) {
+            const name = form.name.value.trim();
+            const nickname = form.nickname.value.trim();
+            const email = form.email.value.trim();
+            const password = form.password.value;
+
+            // Validaciones básicas
+            if (!name || !nickname || !email || !password) {
+                showError('Por favor, completa todos los campos obligatorios.');
+                return false;
+            }
+
+            if (name.length < 2) {
+                showError('El nombre debe tener al menos 2 caracteres.');
+                return false;
+            }
+
+            if (nickname.length < 3) {
+                showError('El nombre de usuario debe tener al menos 3 caracteres.');
+                return false;
+            }
+
+            if (!isValidEmail(email)) {
+                showError('Por favor, ingresa un correo electrónico válido.');
+                return false;
+            }
+
+            if (!validatePassword(password)) {
+                showError('La contraseña no cumple con los requisitos de seguridad.');
+                return false;
+            }
+
+            showSuccess('¡Administrador creado correctamente!');
+            return true;
+        }
+
+        // Validación de email
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Validación de contraseña
+        function validatePassword(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /\d/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+            };
+
+            updatePasswordRequirements(requirements);
+            return Object.values(requirements).every(req => req);
+        }
+
+        // Actualizar indicadores de requisitos de contraseña
+        function updatePasswordRequirements(requirements) {
+            const reqs = {
+                'length-req': requirements.length,
+                'uppercase-req': requirements.uppercase,
+                'lowercase-req': requirements.lowercase,
+                'number-req': requirements.number,
+                'special-req': requirements.special
+            };
+
+            Object.keys(reqs).forEach(id => {
+                const element = document.getElementById(id);
+                const icon = element.querySelector('i');
+                if (reqs[id]) {
+                    element.classList.add('valid');
+                    icon.className = 'fas fa-check';
+                } else {
+                    element.classList.remove('valid');
+                    icon.className = 'fas fa-times';
+                }
+            });
+        }
+
+        // Toggle mostrar/ocultar contraseña
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const button = input.nextElementSibling.nextElementSibling;
+            const icon = button.querySelector('i');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        // Mostrar mensajes de error
+        function showError(message) {
+            removeAlerts();
+            const alertDiv = createAlert('error', message);
+            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.admin-card'));
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        // Mostrar mensajes de éxito
+        function showSuccess(message) {
+            removeAlerts();
+            const alertDiv = createAlert('success', message);
+            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.admin-card'));
+            setTimeout(() => alertDiv.remove(), 3000);
+        }
+
+        // Crear elemento de alerta
+        function createAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert ${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+            `;
+            return alertDiv;
+        }
+
+        // Remover alertas existentes
+        function removeAlerts() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => alert.remove());
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Validación en tiempo real de contraseña
+            const passwordInput = document.getElementById('password');
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function() {
+                    if (this.value) {
+                        validatePassword(this.value);
+                    } else {
+                        // Resetear requisitos si está vacío
+                        updatePasswordRequirements({
+                            length: false,
+                            uppercase: false,
+                            lowercase: false,
+                            number: false,
+                            special: false
+                        });
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

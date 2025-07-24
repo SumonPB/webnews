@@ -3,61 +3,105 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Usuario</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style-user.css}">
+    <!-- <link rel="stylesheet" href="../static/css/style-user.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 
-    <h2 th:text="'Bienvenido ' + ${email}">Bienvenido Usuario</h2>
-
-    <div class="subscription-status">
-        <p
-            th:if="${subscription == null or subscription.endSubscription == null or subscription.endSubscription.isBefore(T(java.time.LocalDateTime).now())}">
-            No posee subscripción activa.
-        </p>
-        <p
-            th:if="${subscription != null and subscription.endSubscription != null and subscription.endSubscription.isAfter(T(java.time.LocalDateTime).now())}">
-            Su subscripción expira el
-            <strong th:text="${#temporals.format(subscription.endSubscription, 'dd-MM-yyyy HH:mm')}">fecha</strong>.
-        </p>
-    </div>
-
-    <div class="buttons">
-        <form action="/configureProfile" method="get">
-            <button type="submit">Configurar perfil</button>
-        </form>
-
-        <form action="/goToBuySubscription" method="get">
-            <button type="submit">Comprar Subscripción</button>
-        </form>
-
-        <form action="/chooseCategoriesPage" method="get">
-            <button type="submit">Escoger Categorías</button>
-        </form>
-
-        <form action="/seeAllBils" method="get">
-            <button type="submit">Ver Facturas</button>
-        </form>
-
-        <a th:href="@{/logout}">
-            <button>Salir</button>
-        </a>
-    </div>
-
-    <h3>Noticias Recomendadas</h3>
-
-    <div th:each="news : ${news}">
-        <div class="news-item">
-            <div class="news-title" th:text="${news.title}">Título</div>
-            <div class="news-meta">
-                <span>Autor: <span th:text="${news.author}">Autor</span></span>
-                <span class="badge" th:text="${news.category}">Categoría</span>
+    <header class="user-header">
+        <div class="welcome-section">
+            <h2><i class="fas fa-user-circle"></i> Bienvenido, <span th:text="${email}" class="user-email">Usuario</span></h2>
+            <div class="subscription-status">
+                <div th:if="${subscription == null or subscription.endSubscription == null or subscription.endSubscription.isBefore(T(java.time.LocalDateTime).now())}" 
+                     class="status-inactive">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>No posee subscripción activa</span>
+                </div>
+                <div th:if="${subscription != null and subscription.endSubscription != null and subscription.endSubscription.isAfter(T(java.time.LocalDateTime).now())}" 
+                     class="status-active">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Su subscripción expira el <strong th:text="${#temporals.format(subscription.endSubscription, 'dd-MM-yyyy HH:mm')}">fecha</strong></span>
+                </div>
             </div>
-            <p th:text="${news.content}">Contenido</p>
+        </div>
+    </header>
+
+    <div class="action-buttons">
+        <div class="button-grid">
+            <form action="/configureProfile" method="get">
+                <button type="submit" class="action-btn">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Configurar perfil</span>
+                </button>
+            </form>
+
+            <form action="/goToBuySubscription" method="get">
+                <button type="submit" class="action-btn premium">
+                    <i class="fas fa-crown"></i>
+                    <span>Comprar Subscripción</span>
+                </button>
+            </form>
+
+            <form action="/chooseCategoriesPage" method="get">
+                <button type="submit" class="action-btn">
+                    <i class="fas fa-tags"></i>
+                    <span>Escoger Categorías</span>
+                </button>
+            </form>
+
+            <form action="/seeAllBils" method="get">
+                <button type="submit" class="action-btn">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Ver Facturas</span>
+                </button>
+            </form>
+
+            <a th:href="@{/logout}">
+                <button class="action-btn logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Salir</span>
+                </button>
+            </a>
         </div>
     </div>
+
+    <section class="news-section">
+        <h3><i class="fas fa-newspaper"></i> Noticias Recomendadas</h3>
+        
+        <div class="news-grid">
+            <div th:each="news : ${news}" class="news-card">
+                <div class="news-header">
+                    <h4 class="news-title" th:text="${news.title}">Título</h4>
+                </div>
+                <div class="news-meta">
+                    <div class="author-info">
+                        <i class="fas fa-user"></i>
+                        <span th:text="${news.author}">Autor</span>
+                    </div>
+                    <span class="category-badge" th:text="${news.category}">Categoría</span>
+                </div>
+                <p class="news-content" th:text="${news.content}">Contenido</p>
+                <div class="news-footer">
+                    <span class="read-more">Leer más <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="user-footer">
+        <p><i class="fas fa-shield-alt"></i> Panel de Usuario Seguro | &copy; <span id="year"></span>Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        localStorage.clear();
+        sessionStorage.clear();
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
 
 </body>
 

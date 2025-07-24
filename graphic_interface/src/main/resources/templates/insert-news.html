@@ -1,45 +1,354 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
-    <title>Ingresar Nueva Noticia</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresar Nueva Noticia | Panel de Administrador</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style-insertNews.css}">
+    <!-- <link rel="stylesheet" href="../static/css/style-insertNews.css"> -->
 </head>
+
 <body>
+    <div class="container">
+        <div class="news-card">
+            <div class="card-header">
+                <div class="header-icon">
+                    <i class="fas fa-newspaper"></i>
+                </div>
+                <h1>Ingresar Nueva Noticia</h1>
+                <p class="header-subtitle">Completa todos los campos para publicar una nueva noticia en la plataforma
+                </p>
+            </div>
 
-<h2>Ingresar Nueva Noticia</h2>
+            <div class="publish-stats">
+                <div class="stat-item">
+                    <i class="fas fa-file-alt"></i>
+                    <div class="stat-info">
+                        <span class="stat-number" id="wordCount">0</span>
+                        <span class="stat-label">Palabras</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-clock"></i>
+                    <div class="stat-info">
+                        <span class="stat-number" id="charCount">0</span>
+                        <span class="stat-label">Caracteres</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-layer-group"></i>
+                    <div class="stat-info">
+                        <span class="stat-number">4</span>
+                        <span class="stat-label">Categorías</span>
+                    </div>
+                </div>
+            </div>
 
-<form action="/InsertNew" method="post">
-    <label for="title">Título:</label>
-    <input type="text" id="title" name="title" required><br><br>
+            <form action="/InsertNew" method="post" class="news-form" onsubmit="return validateForm(this)">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="title">
+                            <i class="fas fa-heading"></i>
+                            Título de la Noticia
+                            <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="text" id="title" name="title" required
+                                placeholder="Ingresa un título llamativo y descriptivo" class="form-input"
+                                maxlength="200">
+                            <div class="input-icon">
+                                <i class="fas fa-heading"></i>
+                            </div>
+                            <div class="char-counter">
+                                <span id="titleCount">0</span>/200
+                            </div>
+                        </div>
+                        <span class="helper-text">Máximo 200 caracteres. Sé claro y conciso</span>
+                    </div>
 
-    <label for="content">Contenido:</label><br>
-    <textarea id="content" name="content" rows="5" cols="50" required></textarea><br><br>
+                    <div class="form-group full-width">
+                        <label for="content">
+                            <i class="fas fa-align-left"></i>
+                            Contenido de la Noticia
+                            <span class="required">*</span>
+                        </label>
+                        <div class="textarea-wrapper">
+                            <textarea id="content" name="content" rows="8" required
+                                placeholder="Escribe el contenido completo de la noticia aquí..."
+                                class="form-textarea"></textarea>
+                            <div class="textarea-icon">
+                                <i class="fas fa-align-left"></i>
+                            </div>
+                        </div>
+                        <div class="content-stats">
+                            <span class="words-counter"><i class="fas fa-font"></i> <span id="contentWords">0</span>
+                                palabras</span>
+                            <span class="chars-counter"><i class="fas fa-text-height"></i> <span
+                                    id="contentChars">0</span> caracteres</span>
+                        </div>
+                        <span class="helper-text">Escribe un contenido bien estructurado y verificado</span>
+                    </div>
 
-    <label for="author">Autor:</label>
-    <input type="text" id="author" name="author" required><br><br>
+                    <div class="form-group">
+                        <label for="author">
+                            <i class="fas fa-user-edit"></i>
+                            Autor
+                            <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="text" id="author" name="author" required placeholder="Nombre del autor"
+                                class="form-input">
+                            <div class="input-icon">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                        </div>
+                        <span class="helper-text">Nombre completo del periodista o autor</span>
+                    </div>
 
-    <label for="category">Categoría:</label>
-    <select name="category" id="category" required>
-        <option value="" disabled selected>Selecciona una categoría</option>
-        <option value="TECNOLOGIA">TECNOLOGÍA</option>
-        <option value="POLITICA">POLÍTICA</option>
-        <option value="ENTRETENIMIENTO">ENTRETENIMIENTO</option>
-        <option value="SALUD">SALUD</option>
-    </select><br><br>
+                    <div class="form-group">
+                        <label for="category">
+                            <i class="fas fa-tags"></i>
+                            Categoría
+                            <span class="required">*</span>
+                        </label>
+                        <div class="select-wrapper">
+                            <select name="category" id="category" required class="form-select">
+                                <option value="" disabled selected>Selecciona una categoría</option>
+                                <option value="TECNOLOGIA">TECNOLOGÍA</option>
+                                <option value="POLITICA">POLÍTICA</option>
+                                <option value="ENTRETENIMIENTO">ENTRETENIMIENTO</option>
+                                <option value="SALUD">SALUD</option>
+                                <option value="DEPORTES">DEPORTES</option>
+                                <option value="ECONOMIA">ECONOMÍA</option>
+                                <option value="CIENCIA">CIENCIA</option>
+                            </select>
+                            <div class="select-icon">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <span class="helper-text">Selecciona la categoría más apropiada</span>
+                    </div>
 
-    <label for="subscriptionName">Tipo de suscripción:</label>
-    <select name="subscriptionName" id="subscriptionName" required>
-        <option value="" disabled selected>Selecciona una suscripción</option>
-        <option value="FREE">FREE</option>
-        <option value="TITULAR">TITULAR</option>
-        <option value="REDACCIONPlus">REDACCIÓN Plus</option>
-        <option value="INSIDER">INSIDER</option>
-    </select><br><br>
+                    <div class="form-group">
+                        <label for="subscriptionName">
+                            <i class="fas fa-crown"></i>
+                            Tipo de Suscripción
+                            <span class="required">*</span>
+                        </label>
+                        <div class="select-wrapper">
+                            <select name="subscriptionName" id="subscriptionName" required class="form-select">
+                                <option value="" disabled selected>Selecciona una suscripción</option>
+                                <option value="FREE">FREE - Acceso público</option>
+                                <option value="TITULAR">TITULAR - Suscripción básica</option>
+                                <option value="REDACCIONPlus">REDACCIÓN Plus - Suscripción premium</option>
+                                <option value="INSIDER">INSIDER - Acceso exclusivo</option>
+                            </select>
+                            <div class="select-icon">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <span class="helper-text">Define quién puede leer esta noticia</span>
+                    </div>
 
-    <button type="submit">Crear Noticia</button>
-</form>
+                    <div class="form-group">
+                        <label for="publishDate">
+                            <i class="fas fa-calendar"></i>
+                            Fecha de Publicación
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="datetime-local" id="publishDate" name="publishDate" class="form-input">
+                            <div class="input-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                        </div>
+                        <span class="helper-text">Dejar en blanco para publicar ahora</span>
+                    </div>
+                </div>
 
-<a href="/admin"><button>Volver al Inicio</button></a>
+                <div class="preview-section">
+                    <h3><i class="fas fa-eye"></i> Vista Previa</h3>
+                    <div class="news-preview">
+                        <div class="preview-header">
+                            <span class="preview-category" id="previewCategory">Categoría</span>
+                            <h4 class="preview-title" id="previewTitle">Título de la noticia aparecerá aquí</h4>
+                        </div>
+                        <div class="preview-content">
+                            <p class="preview-text" id="previewContent">El contenido de la noticia aparecerá aquí...</p>
+                        </div>
+                        <div class="preview-footer">
+                            <span class="preview-author" id="previewAuthor">Por Autor</span>
+                            <span class="preview-subscription" id="previewSubscription">Tipo de suscripción</span>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Publicar Noticia</span>
+                    </button>
+
+                    <a href="/admin" class="back-button">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Volver al Panel</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Validación del formulario
+        function validateForm(form) {
+            const title = form.title.value.trim();
+            const content = form.content.value.trim();
+            const author = form.author.value.trim();
+            const category = form.category.value;
+            const subscription = form.subscriptionName.value;
+
+            if (!title || !content || !author || !category || !subscription) {
+                showError('Por favor, completa todos los campos obligatorios.');
+                return false;
+            }
+
+            if (title.length < 5) {
+                showError('El título debe tener al menos 5 caracteres.');
+                return false;
+            }
+
+            if (content.length < 20) {
+                showError('El contenido debe tener al menos 20 caracteres.');
+                return false;
+            }
+
+            if (author.length < 3) {
+                showError('El nombre del autor debe tener al menos 3 caracteres.');
+                return false;
+            }
+
+            showSuccess('¡Noticia publicada correctamente!');
+            return true;
+        }
+
+        // Actualizar contadores y vista previa
+        function updateCounters() {
+            const title = document.getElementById('title');
+            const content = document.getElementById('content');
+            const titleCount = document.getElementById('titleCount');
+            const wordCount = document.getElementById('wordCount');
+            const charCount = document.getElementById('charCount');
+            const contentWords = document.getElementById('contentWords');
+            const contentChars = document.getElementById('contentChars');
+
+            // Contador de título
+            if (title && titleCount) {
+                titleCount.textContent = title.value.length;
+                title.addEventListener('input', function () {
+                    titleCount.textContent = this.value.length;
+                    document.getElementById('previewTitle').textContent = this.value || 'Título de la noticia aparecerá aquí';
+                });
+            }
+
+            // Contadores de contenido
+            if (content) {
+                function updateContentStats() {
+                    const text = content.value;
+                    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+                    const chars = text.length;
+
+                    wordCount.textContent = words;
+                    charCount.textContent = chars;
+                    contentWords.textContent = words;
+                    contentChars.textContent = chars;
+
+                    document.getElementById('previewContent').textContent = text || 'El contenido de la noticia aparecerá aquí...';
+                }
+
+                content.addEventListener('input', updateContentStats);
+                updateContentStats();
+            }
+
+            // Actualizar autor en vista previa
+            const author = document.getElementById('author');
+            if (author) {
+                author.addEventListener('input', function () {
+                    document.getElementById('previewAuthor').textContent = 'Por ' + (this.value || 'Autor');
+                });
+            }
+
+            // Actualizar categoría en vista previa
+            const category = document.getElementById('category');
+            if (category) {
+                category.addEventListener('change', function () {
+                    document.getElementById('previewCategory').textContent = this.options[this.selectedIndex].text;
+                });
+            }
+
+            // Actualizar suscripción en vista previa
+            const subscription = document.getElementById('subscriptionName');
+            if (subscription) {
+                subscription.addEventListener('change', function () {
+                    document.getElementById('previewSubscription').textContent = this.options[this.selectedIndex].text.split(' - ')[0];
+                });
+            }
+        }
+
+        // Mostrar mensajes de error
+        function showError(message) {
+            removeAlerts();
+            const alertDiv = createAlert('error', message);
+            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.news-card'));
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        // Mostrar mensajes de éxito
+        function showSuccess(message) {
+            removeAlerts();
+            const alertDiv = createAlert('success', message);
+            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.news-card'));
+            setTimeout(() => alertDiv.remove(), 3000);
+        }
+
+        // Crear elemento de alerta
+        function createAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert ${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+            `;
+            return alertDiv;
+        }
+
+        // Remover alertas existentes
+        function removeAlerts() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => alert.remove());
+        }
+
+        // Inicializar cuando el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', function () {
+            updateCounters();
+
+            // Establecer fecha y hora actual por defecto
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+
+            const datetimeLocal = `${year}-${month}-${day}T${hours}:${minutes}`;
+            const publishDate = document.getElementById('publishDate');
+            if (publishDate) {
+                publishDate.value = datetimeLocal;
+            }
+        });
+    </script>
 </body>
+
 </html>
