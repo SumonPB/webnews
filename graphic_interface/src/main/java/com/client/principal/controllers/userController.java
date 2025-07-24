@@ -87,7 +87,7 @@ public class userController {
         return "choose_categories";
     }
 
-    @GetMapping("/InsertClient")
+    @PostMapping("/InsertClient")
     public String insertCustomer(
             @RequestParam("name") String name,
             @RequestParam("nickname") String nickname,

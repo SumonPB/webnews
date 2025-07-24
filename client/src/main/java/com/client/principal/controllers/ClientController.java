@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.client.principal.logic.ClientUC;
 import com.client.principal.logic.DAO.ClientDao;
-import com.client.principal.logic.NETWORK.GetSubscription;
 import com.client.principal.logic.Validations_Encriptations.Cesar;
 import com.client.principal.logic.Validations_Encriptations.EmailPaswordVal;
 import com.client.principal.logic.data.CategoryNews;
