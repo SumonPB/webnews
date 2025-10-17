@@ -6,15 +6,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.client.principal.logic.data.network.PaymentEP;
 
-@FeignClient(name = "CreateBill", url = "http://localhost:9093")
+@FeignClient(name = "payment")
 public interface CreateBill {
-    @GetMapping("/CreatePayment")
-    public PaymentEP createPayment(
-            @RequestParam("clientEmail") String clientEmail,
-            @RequestParam("subscriptionname") String subscriptionName,
-            @RequestParam("paymentmethod") String paymentMethod);
+        @GetMapping("/CreatePayment")
+        public PaymentEP createPayment(
+                        @RequestParam("clientEmail") String clientEmail,
+                        @RequestParam("subscriptionname") String subscriptionName,
+                        @RequestParam("paymentmethod") String paymentMethod);
 
-    @GetMapping("GetBillById")
-    public PaymentEP getBillById(
-            @RequestParam("billId") String billId);
+        @GetMapping("GetBillById")
+        public PaymentEP getBillById(
+                        @RequestParam("billId") String billId);
 }

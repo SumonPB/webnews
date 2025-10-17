@@ -6,9 +6,11 @@ import java.util.concurrent.Flow.Subscription;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.client.principal.logic.DAO.BillsDAO;
 import com.client.principal.logic.Network.PaymentUI;
@@ -16,7 +18,8 @@ import com.client.principal.logic.Network.SubscriptionUI;
 import com.client.principal.logic.data.newtwork.PaymentEP;
 import com.client.principal.logic.data.newtwork.SubscriptionEP;
 
-@Controller
+@CrossOrigin(origins = "http://localhost:5173")
+@RestController
 public class PaymentsController {
     @Autowired
     PaymentUI paymentUI;
@@ -24,7 +27,6 @@ public class PaymentsController {
     SubscriptionUI subscriptionUI;
 
     @GetMapping("/getAllBills")
-    @ResponseBody
     public List<BillsDAO> getAllBils() {
         List<PaymentEP> paymentList = paymentUI.getAllBill();
         List<BillsDAO> bills = new ArrayList<>();

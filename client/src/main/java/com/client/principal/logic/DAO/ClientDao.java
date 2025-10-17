@@ -1,6 +1,5 @@
 package com.client.principal.logic.DAO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.client.principal.logic.data.CategoryNews;

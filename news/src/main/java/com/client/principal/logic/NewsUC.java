@@ -35,7 +35,8 @@ public class NewsUC {
             String content,
             String author,
             String category,
-            String subscriptionName) {
+            String subscriptionName,
+            String imageUrl) {
 
         CategoryNews categoryEnum;
         try {
@@ -50,6 +51,7 @@ public class NewsUC {
                 .author(author)
                 .category(categoryEnum)
                 .subscriptionId(getSubscription.GetSubscriptionByName(subscriptionName).getId())
+                .imgUrl(imageUrl)
                 .build();
         newsRepository.save(news);
         return NewsDTO.newsFormat(news, getSubscription.GetSubscriptionByName(subscriptionName).getName());
@@ -68,7 +70,8 @@ public class NewsUC {
             String content,
             String author,
             String category,
-            String subscriptionId) {
+            String subscriptionName,
+            String imageUrl) {
 
         ;
         News news = newsRepository.getNewsById(id);
@@ -98,8 +101,13 @@ public class NewsUC {
             }
         }
 
-        if (subscriptionId != null) {
-            news.setSubscriptionId(subscriptionId);
+        if (subscriptionName != null) {
+
+            news.setSubscriptionId(getSubscription.GetSubscriptionByName(subscriptionName).getId());
+        }
+
+        if (imageUrl != null) {
+            news.setImgUrl(imageUrl);
         }
 
         newsRepository.save(news);

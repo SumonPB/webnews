@@ -28,6 +28,9 @@ public class PaymentUC {
     @Autowired
     PaymentRepository paymentRepository;
 
+    @Autowired
+    private PaymentDTO paymentDTO;
+
     public SubscriptionEP getSubscriptionDetails(String name) {
         return getSubscription.GetSubscriptionByName(name);
     }
@@ -50,25 +53,25 @@ public class PaymentUC {
                 .userId(client.getId())
                 .startSubscription(LocalDateTime.now())
                 .endSubscription(LocalDateTime.now().plusDays(30))
-                .subscriptionId(subscription.getId())
+                .subscriptionName(subscription.getName())
                 .build();
 
-        Payment payment = paymentRepository.save(PaymentDTO.toPaymentEntity(paymentUI));
+        Payment payment = paymentRepository.save(paymentDTO.toPaymentEntity(paymentUI));
 
-        return PaymentDTO.toPaymentUI(payment);
+        return paymentDTO.toPaymentUI(payment);
 
     }
 
     public List<PaymentUI> getAllPayments() {
         return paymentRepository.findAll()
                 .stream()
-                .map(PaymentDTO::toPaymentUI)
+                .map(paymentDTO::toPaymentUI)
                 .collect(Collectors.toList());
     }
 
     public PaymentUI getBillById(String id) {
 
-        return PaymentDTO.toPaymentUI(paymentRepository.getBillById(id));
+        return paymentDTO.toPaymentUI(paymentRepository.getBillById(id));
     }
 
 }

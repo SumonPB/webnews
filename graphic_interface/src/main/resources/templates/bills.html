@@ -1,25 +1,162 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <title>Facturas</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facturas | Tu Información al Instante</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/style-bills.css">
 </head>
 <body>
-    <h2>Facturas del Cliente</h2>
-    <table border="1">
-        <tr>
-            <th>Fecha fin de subscripción</th>
-            <th>Método de Pago</th>
-            <th>ID de Subscripción</th>
-            <th>Monto</th>
-        </tr>
-        <tr th:each="bill : ${bills}">
-            <td th:text="${#temporals.format(bill.endSubscription, 'dd-MM-yyyy HH:mm')}">Fecha</td>
-            <td th:text="${bill.paymentMethod}">Método</td>
-            <td th:text="${bill.subscriptionId}">Subscripción</td>
-            <td th:text="${bill.amount}">Monto</td>
-        </tr>
-    </table>
-    <br>
-    <a href="/user"><button>Volver</button></a>
+    <div class="container">
+        <header class="page-header">
+            <div class="header-content">
+                <h1><i class="fas fa-file-invoice"></i> Facturas del Cliente</h1>
+                <p class="header-subtitle">Historial completo de sus transacciones y pagos</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat-card">
+                    <i class="fas fa-receipt"></i>
+                    <div class="stat-info">
+                        <span class="stat-number" th:text="${bills != null ? bills.size() : 0}">0</span>
+                        <span class="stat-label">Facturas</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <div class="stat-info">
+                        <span class="stat-number total-amount" th:text="${#lists.isEmpty(bills) ? '$0.00' : '$' + #numbers.formatDecimal(#lists.sum(bills.![amount]), 1, 2)}">$0.00</span>
+                        <span class="stat-label">Total Pagado</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="table-container" th:if="${bills != null and !bills.empty}">
+                <div class="table-header">
+                    <h2><i class="fas fa-table"></i> Historial de Facturas</h2>
+                    <div class="search-filter">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Buscar facturas...">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table class="bills-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-calendar"></i> Fecha Fin Subscripción</th>
+                                <th><i class="fas fa-credit-card"></i> Método de Pago</th>
+                                <th><i class="fas fa-hashtag"></i> ID de Subscripción</th>
+                                <th><i class="fas fa-dollar-sign"></i> Monto</th>
+                                <th><i class="fas fa-info-circle"></i> Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="bill : ${bills}" class="bill-row">
+                                <td data-label="Fecha Fin">
+                                    <div class="date-cell">
+                                        <i class="fas fa-calendar-day"></i>
+                                        <span th:text="${#temporals.format(bill.endSubscription, 'dd-MM-yyyy HH:mm')}">Fecha</span>
+                                    </div>
+                                </td>
+                                <td data-label="Método de Pago">
+                                    <div class="payment-method" th:classappend="${bill.paymentMethod == 'Tarjeta de Crédito' ? 'credit-card' : bill.paymentMethod == 'PayPal' ? 'paypal' : 'bank'}">
+                                        <i class="fas fa-credit-card"></i>
+                                        <span th:text="${bill.paymentMethod}">Método</span>
+                                    </div>
+                                </td>
+                                <td data-label="ID Subscripción">
+                                    <div class="subscription-id">
+                                        <i class="fas fa-fingerprint"></i>
+                                        <span th:text="${bill.subscriptionId}">Subscripción</span>
+                                    </div>
+                                </td>
+                                <td data-label="Monto">
+                                    <div class="amount-cell">
+                                        <span class="currency">$</span>
+                                        <span class="amount" th:text="${#numbers.formatDecimal(bill.amount, 1, 2)}">Monto</span>
+                                    </div>
+                                </td>
+                                <td data-label="Estado">
+                                    <span class="status-badge paid">Pagado</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="no-bills" th:if="${bills == null or bills.empty}">
+                <div class="no-bills-content">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <h3>No hay facturas disponibles</h3>
+                    <p>Aún no has realizado ninguna subscripción o pago.</p>
+                </div>
+            </div>
+        </main>
+
+        <div class="action-footer">
+            <a href="/user" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                <span>Volver al Panel</span>
+            </a>
+            
+            <div class="export-options">
+                <button class="export-btn" onclick="window.print()">
+                    <i class="fas fa-print"></i>
+                    <span>Imprimir</span>
+                </button>
+                <button class="export-btn">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Exportar PDF</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funcionalidad de búsqueda
+        document.getElementById('searchInput')?.addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.bill-row');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // Animación de números
+        document.addEventListener('DOMContentLoaded', function() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                if (stat.classList.contains('total-amount')) {
+                    // Para el total, ya viene formateado
+                    return;
+                }
+                
+                const target = parseInt(stat.textContent);
+                if (!isNaN(target)) {
+                    let count = 0;
+                    const duration = 1500;
+                    const increment = target / (duration / 16);
+                    const timer = setInterval(() => {
+                        count += increment;
+                        if (count >= target) {
+                            stat.textContent = target;
+                            clearInterval(timer);
+                        } else {
+                            stat.textContent = Math.floor(count);
+                        }
+                    }, 16);
+                }
+            });
+        });
+    </script>
 </body>
 </html>

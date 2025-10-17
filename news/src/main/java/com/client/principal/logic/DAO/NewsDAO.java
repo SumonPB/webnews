@@ -14,4 +14,5 @@ public class NewsDAO {
     private String title;
     private String author;
     private String content;
+    private String imgUrl;
 }

@@ -1,16 +1,18 @@
 package com.client.principal.controllers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.client.principal.logic.ClientUC;
 import com.client.principal.logic.DAO.ClientDao;
+import com.client.principal.logic.DAO.paymentDao;
 import com.client.principal.logic.Validations_Encriptations.Cesar;
 import com.client.principal.logic.Validations_Encriptations.EmailPaswordVal;
 import com.client.principal.logic.data.CategoryNews;
@@ -18,20 +20,26 @@ import com.client.principal.logic.data.ClientUI;
 import com.client.principal.logic.data.network.NewsEP;
 import com.client.principal.logic.data.network.PaymentEP;
 import org.springframework.dao.DuplicateKeyException;
+import com.client.principal.data.entities.Client;
+import com.client.principal.data.repositorys.ClientRepository;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 public class ClientController {
     @Autowired
     private ClientUC clientUC;
     @Autowired
     private Cesar cesar;
+    @Autowired
+    private ClientRepository clientRepository;
 
-    @GetMapping("/InsertClient")
-    public String insertCustomer(
-            @RequestParam("name") String name,
-            @RequestParam("nickname") String nickname,
-            @RequestParam("email") String email,
-            @RequestParam("password") String password) {
+    @PostMapping("/InsertClient")
+    public String insertCustomer(@RequestBody Map<String, String> data) {
+        String name = data.get("name");
+        String nickname = data.get("nickname");
+        String email = data.get("email");
+        String password = data.get("password");
+
         try {
             if (EmailPaswordVal.isValidEmail(email)) {
                 if (!EmailPaswordVal.isValidPassword(password)) {
@@ -39,14 +47,13 @@ public class ClientController {
                 }
                 password = cesar.encrypt(password);
                 clientUC.createClient(name, nickname, email, password);
-                return "Cliente creado correctamente: " + name + " " + nickname + " " + email;
+                return "Usuario creado correctamente: ";
             } else {
                 return "Correo invalido: ";
             }
         } catch (DuplicateKeyException e) {
             return "Correo Electronico ya registrado: " + email;
         }
-
     }
 
     @GetMapping("/GetAllClients")
@@ -60,30 +67,32 @@ public class ClientController {
         return client;
     }
 
-    @GetMapping("/updateClient")
-    public String updateClient(
-            @RequestParam("email") String email,
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "nickname", required = false) String nickname,
-            @RequestParam(value = "password", required = false) String password) {
+    @PostMapping("/updateClient")
+    public boolean updateClient(@RequestBody Map<String, String> data) {
         try {
-            if (password != null) {
-                if (!EmailPaswordVal.isValidPassword(password)) {
-                    return "Contraseña inválida, debe tener al menos 8 caracteres alfanuméricos.";
-                }
-            }
+            String email = data.get("email");
+            String name = data.get("name"); // puede ser null
+            String nickname = data.get("nickname"); // puede ser null
+            String password = data.get("password"); // puede ser null
+
+            // Validaciones
             if (!EmailPaswordVal.isValidEmail(email)) {
-                return "Correo inválido.";
+                return false;
             }
 
-            password = cesar.encrypt(password);
+            if (password != null && !password.isEmpty()) {
+                if (!EmailPaswordVal.isValidPassword(password)) {
+                    return false;
+                }
+                password = cesar.encrypt(password);
+            }
 
             clientUC.updateClient(name, nickname, email, password);
 
-            return "Cliente actualizado correctamente: " + name + " " + nickname + " " + email;
+            return true;
 
         } catch (DuplicateKeyException e) {
-            return "Correo electrónico ya registrado: " + email;
+            return false;
         }
     }
 
@@ -92,7 +101,7 @@ public class ClientController {
         return clientUC.findClientByEmail(email);
     }
 
-    @GetMapping("/choseCategories")
+    @PostMapping("/choseCategories")
     public ClientDao choseCategories(
             @RequestParam("email") String email,
             @RequestParam("categories") List<CategoryNews> categoryNews) {
@@ -100,13 +109,16 @@ public class ClientController {
         return clientUC.agregarCategorias(email, categoryNews);
     }
 
-    @GetMapping("/buySubscription")
+    @PostMapping("/buySubscription")
     public ClientDao buySubscription(
             @RequestParam("email") String email,
             @RequestParam("subscriptionName") String subscriptionName,
             @RequestParam("methodPay") String methodPay) {
-
-        return clientUC.buySubscription(email, subscriptionName, methodPay);
+        Client existingClient = clientRepository.getClientByEmail(email);
+        if (existingClient == null) {
+            throw new RuntimeException("Cliente no encontrado");
+        }
+        return clientUC.buySubscription(existingClient, subscriptionName, methodPay);
     }
 
     @GetMapping("/seeNewsNoLog")
@@ -121,7 +133,7 @@ public class ClientController {
     }
 
     @GetMapping("/seeAllBills")
-    public List<PaymentEP> seeAllBills(@RequestParam("email") String email) {
+    public List<paymentDao> seeAllBills(@RequestParam("email") String email) {
 
         return clientUC.getBills(email);
     }

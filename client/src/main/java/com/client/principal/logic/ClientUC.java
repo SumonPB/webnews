@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.client.principal.data.entities.Client;
 import com.client.principal.data.repositorys.ClientRepository;
 import com.client.principal.logic.DAO.ClientDao;
+import com.client.principal.logic.DAO.paymentDao;
 import com.client.principal.logic.DTO.ClientDTO;
+import com.client.principal.logic.DTO.PaymentDTO;
 import com.client.principal.logic.NETWORK.CreateBill;
 import com.client.principal.logic.NETWORK.EmailService;
 import com.client.principal.logic.NETWORK.GetSubscription;
@@ -137,8 +139,7 @@ public class ClientUC {
             return null; // Client not found
         }
         if (name != null)
-            System.out.println(name);
-        existingClient.setName(name);
+            existingClient.setName(name);
         if (nickname != null)
             existingClient.setNickname(nickname);
         if (password != null)
@@ -176,15 +177,14 @@ public class ClientUC {
         throw new IllegalStateException("Tipo de suscripción desconocido: " + subscription.getName());
     }
 
-    public ClientDao buySubscription(String email, String subscriptionName, String payMethod) {
-        Client existingClient = clientRepository.getClientByEmail(email);
-        PaymentEP newBill = createBill.createPayment(email, subscriptionName, payMethod);
+    public ClientDao buySubscription(Client existingClient, String subscriptionName, String payMethod) {
+        PaymentEP newBill = createBill.createPayment(existingClient.getEmail(), subscriptionName, payMethod);
         if (existingClient.getBillsId() == null) {
             existingClient.setBillsId(new ArrayList<>());
         }
         existingClient.getBillsId().add(newBill.getId());
-        existingClient.setSubscriptionID(newBill.getSubscriptionId());
-        emailService.sendSubscriptionEmail(email, newBill);
+        existingClient.setSubscriptionID(getSubscription.GetSubscriptionByName(subscriptionName).getId());
+        emailService.sendSubscriptionEmail(existingClient.getEmail(), newBill);
         return ClientDTO.toClientDao(clientRepository.save(existingClient));
 
     }
@@ -218,6 +218,7 @@ public class ClientUC {
             var subscription = getSubscription.GetSubscriptionByName(subscriptionName);
             if (subscription != null) {
                 existingClient.setSubscriptionID(subscription.getId());
+                buySubscription(existingClient, subscriptionName, "AdminUpdate");
             } else {
                 throw new IllegalArgumentException("Suscripción no válida: " + subscriptionName);
             }
@@ -238,7 +239,7 @@ public class ClientUC {
 
     }
 
-    public List<PaymentEP> getBills(String email) {
+    public List<paymentDao> getBills(String email) {
         List<PaymentEP> paymentEPs = new ArrayList<>();
         if (!email.isEmpty()) {
             ClientUI clientUI = findClientByEmail(email);
@@ -248,6 +249,6 @@ public class ClientUC {
                 }
             }
         }
-        return paymentEPs;
+        return PaymentDTO.toPaymentDao(paymentEPs);
     }
 }

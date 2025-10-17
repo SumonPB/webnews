@@ -13,5 +13,6 @@ public class NewsUI {
     private String author;
     private CategoryNews category;
     private String subscriptionId;
+    private String imgUrl;
 
 }

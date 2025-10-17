@@ -1,16 +1,21 @@
 package com.client.principal.controllers;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import com.client.principal.logic.ClientUC;
 import com.client.principal.logic.Validations_Encriptations.Cesar;
 import com.client.principal.logic.Validations_Encriptations.EmailPaswordVal;
 import com.client.principal.logic.data.ClientUI;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 public class AdminController {
     @Autowired
@@ -55,31 +60,34 @@ public class AdminController {
 
     }
 
-    @GetMapping("/updateCli")
-    public String updateCli(
-            @RequestParam("email") String email,
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "nickname", required = false) String nickname,
-            @RequestParam(value = "password", required = false) String password,
-            @RequestParam(value = "subscriptionName", required = false) String subscriptionName) {
+    @PostMapping("/updateCli")
+    public boolean updateCli(@RequestBody Map<String, String> data) {
         try {
-            if (password != null) {
-                if (!EmailPaswordVal.isValidPassword(password)) {
-                    return "Contraseña inválida, debe tener al menos 8 caracteres alfanuméricos.";
-                }
-            }
+            String email = data.get("email");
+            String name = data.get("name"); // puede ser null
+            String nickname = data.get("nickname"); // puede ser null
+            String password = data.get("password"); // puede ser null
+            String subscriptionName = data.get("subscriptionName"); // opcional
+
+            // Validaciones
             if (!EmailPaswordVal.isValidEmail(email)) {
-                return "Correo inválido.";
+                return false;
             }
 
-            password = cesar.encrypt(password);
+            if (password != null && !password.isEmpty()) {
+                if (!EmailPaswordVal.isValidPassword(password)) {
+                    return false;
+                }
+                password = cesar.encrypt(password);
+            }
 
+            // Actualizar el cliente con la suscripción opcional
             clientUC.updateCli(name, nickname, email, password, subscriptionName);
 
-            return "Cliente actualizado correctamente: " + name + " " + nickname + " " + email;
+            return true;
 
         } catch (DuplicateKeyException e) {
-            return "Correo electrónico ya registrado: " + email;
+            return false;
         }
     }
 

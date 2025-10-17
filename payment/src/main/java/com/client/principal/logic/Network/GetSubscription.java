@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.client.principal.logic.data.newtwork.SubscriptionEP;
 
-@FeignClient(name = "GetSubscription", url = "http://localhost:9092")
+@FeignClient(name = "subscription")
 public interface GetSubscription {
     @GetMapping("/GetSubscriptionByName")
     public SubscriptionEP GetSubscriptionByName(@RequestParam String name);
+
+    @GetMapping("/findbyid")
+    public SubscriptionEP findSubscriptionById(@RequestParam("id") String idParam);
 }

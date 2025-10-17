@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.client.principal.logic.data.network.SubscriptionEP;
 
-@FeignClient(name = "GetSubscription", url = "http://localhost:9092")
+@FeignClient(name = "subscription")
 public interface GetSubscription {
     @GetMapping("/GetSubscriptionByName")
     public SubscriptionEP GetSubscriptionByName(@RequestParam String name);

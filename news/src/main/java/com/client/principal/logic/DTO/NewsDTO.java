@@ -17,6 +17,7 @@ public class NewsDTO {
                 .author(news.getAuthor())
                 .category(news.getCategory())
                 .subscriptionId(news.getSubscriptionId())
+                .imgUrl(news.getImgUrl())
                 .build();
     }
 
@@ -31,6 +32,7 @@ public class NewsDTO {
                 .author(newsUI.getAuthor())
                 .category(newsUI.getCategory())
                 .subscriptionId(newsUI.getSubscriptionId())
+                .imgUrl(newsUI.getImgUrl())
                 .build();
     }
 
@@ -41,6 +43,7 @@ public class NewsDTO {
                 .title(news.getTitle())
                 .author(news.getAuthor())
                 .content(news.getContent())
+                .imgUrl(news.getImgUrl())
                 .build();
     }
 

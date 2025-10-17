@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.client.principal.logic.data.newtwork.UserEP;
 
-@FeignClient(name = "GetClient", url = "http://localhost:9090")
+@FeignClient(name = "client")
 public interface GetClient {
     @GetMapping("/GetClientByEmail")
     public UserEP getClientByEmail(@RequestParam("email") String email);

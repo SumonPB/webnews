@@ -14,5 +14,5 @@ public class PaymentEP {
     private LocalDateTime startSubscription;
     private LocalDateTime endSubscription;
     private String userId;
-    private String subscriptionId;
+    private subscriptionTypes subscriptionName;
 }

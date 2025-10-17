@@ -29,7 +29,7 @@ public class EmailService {
                 payment.getAmount(),
                 payment.getStartSubscription(),
                 payment.getEndSubscription(),
-                payment.getSubscriptionId());
+                payment.getSubscriptionName());
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);

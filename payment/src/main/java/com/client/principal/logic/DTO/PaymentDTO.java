@@ -6,14 +6,22 @@ import java.time.ZoneId;
 import java.util.TimeZone;
 import java.util.concurrent.Flow.Subscription;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.client.principal.data.entities.Payment;
 import com.client.principal.logic.DAO.BillDAO;
+import com.client.principal.logic.Network.GetSubscription;
 import com.client.principal.logic.data.PaymentUI;
 import com.client.principal.logic.data.newtwork.SubscriptionEP;
 import com.client.principal.logic.data.newtwork.UserEP;
 
+@Service
 public class PaymentDTO {
-        public static PaymentUI toPaymentUI(Payment payment) {
+        @Autowired
+        GetSubscription getSubscription;
+
+        public PaymentUI toPaymentUI(Payment payment) {
                 return PaymentUI.builder()
                                 .id(payment.getId())
                                 .paymentMethod(payment.getPaymentMethod())
@@ -25,11 +33,12 @@ public class PaymentDTO {
                                                 Instant.ofEpochMilli(payment.getEndSubscription()),
                                                 TimeZone.getDefault().toZoneId()))
                                 .userId(payment.getUserId())
-                                .subscriptionId(payment.getSubscriptionId())
+                                .subscriptionName(getSubscription.findSubscriptionById(payment.getSubscriptionId())
+                                                .getName())
                                 .build();
         }
 
-        public static Payment toPaymentEntity(PaymentUI paymentUI) {
+        public Payment toPaymentEntity(PaymentUI paymentUI) {
                 return Payment.builder()
                                 .id(paymentUI.getId())
                                 .paymentMethod(paymentUI.getPaymentMethod())
@@ -41,11 +50,13 @@ public class PaymentDTO {
                                                 paymentUI.getEndSubscription().atZone(ZoneId.systemDefault())
                                                                 .toInstant().toEpochMilli())
                                 .userId(paymentUI.getUserId())
-                                .subscriptionId(paymentUI.getSubscriptionId())
+                                .subscriptionId(getSubscription
+                                                .GetSubscriptionByName(paymentUI.getSubscriptionName().toString())
+                                                .getId())
                                 .build();
         }
 
-        public static BillDAO createBill(Payment payment, SubscriptionEP subscriptionEP, UserEP userEP) {
+        public BillDAO createBill(Payment payment, SubscriptionEP subscriptionEP, UserEP userEP) {
 
                 return BillDAO.builder()
                                 .billID(toPaymentUI(payment).getId())
