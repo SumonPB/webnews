@@ -2,11 +2,12 @@ FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
-# Copiamos el JAR que pusiste dentro de la carpeta Eureka
+# Copiamos el JAR
 COPY Eureka-0.0.1-SNAPSHOT.jar app.jar
 
-# Declaramos el puerto (Render lo usa automáticamente)
-ENV PORT=8761
+# Declaramos el puerto dinámico que Render asigna
+ENV PORT=${PORT:-9095}
 EXPOSE ${PORT}
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Arranca la app usando la variable PORT
+ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=$PORT"]
