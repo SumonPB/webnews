@@ -15,7 +15,7 @@ import com.client.principal.logic.Validations_Encriptations.Cesar;
 import com.client.principal.logic.Validations_Encriptations.EmailPaswordVal;
 import com.client.principal.logic.data.ClientUI;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://tuinfoinsta.netlify.app/")
 @RestController
 public class AdminController {
     @Autowired

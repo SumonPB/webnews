@@ -23,7 +23,7 @@ import org.springframework.dao.DuplicateKeyException;
 import com.client.principal.data.entities.Client;
 import com.client.principal.data.repositorys.ClientRepository;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://tuinfoinsta.netlify.app/")
 @RestController
 public class ClientController {
     @Autowired

@@ -18,7 +18,7 @@ import com.client.principal.logic.data.CategoryNews;
 import com.client.principal.logic.data.NewsUI;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://tuinfoinsta.netlify.app/")
 public class NewsControler {
     @Autowired
     private NewsUC newsUC;

@@ -14,7 +14,7 @@ import com.client.principal.logic.data.PaymentUI;
 import com.client.principal.logic.data.newtwork.SubscriptionEP;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://tuinfoinsta.netlify.app/")
 public class PaymentController {
     @Autowired
     private PaymentUC paymentUC;

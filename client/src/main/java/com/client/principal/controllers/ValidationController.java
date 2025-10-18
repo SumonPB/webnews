@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.client.principal.logic.ClientUC;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "https://tuinfoinsta.netlify.app/")
 @RestController
 public class ValidationController {
     @Autowired
