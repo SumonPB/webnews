@@ -1,17 +1,26 @@
 package com.client.principal.logic.NETWORK;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.client.principal.logic.data.network.PaymentEP;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    @Value("${brevo.api.key}")
+    private String apiKey;
+
+    @Value("${brevo.sender.email}")
+    private String senderEmail;
+
+    private final RestTemplate restTemplate = new RestTemplate();
 
     public void sendSubscriptionEmail(String toEmail, PaymentEP payment) {
         String subject = "Confirmación de compra de suscripción";
@@ -31,20 +40,27 @@ public class EmailService {
                 payment.getEndSubscription(),
                 payment.getSubscriptionName());
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("tu-remitente@verificado.com"); // opcional: buen hábito
-        message.setTo(toEmail);
-        message.setSubject(subject);
-        message.setText(body);
+        // Construir request para Brevo
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("sender", Map.of("email", senderEmail));
+        payload.put("to", new Map[] { Map.of("email", toEmail) });
+        payload.put("subject", subject);
+        payload.put("textContent", body);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("api-key", apiKey);
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
 
         try {
-            mailSender.send(message);
-        } catch (org.springframework.mail.MailException ex) {
-            // Loguea el error y no interrumpas la ejecución
-            // usa el logger de tu preferencia; aquí un ejemplo con System.err:
-            System.err.println("No se pudo enviar el email a " + toEmail + ": " + ex.getMessage());
-            // Si usas SLF4J:
-            // logger.warn("No se pudo enviar email a {}: {}", toEmail, ex.getMessage());
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    "https://api.brevo.com/v3/smtp/email",
+                    request,
+                    String.class);
+            System.out.println("Email enviado: " + response.getStatusCode());
+        } catch (Exception e) {
+            System.err.println("No se pudo enviar el email a " + toEmail + ": " + e.getMessage());
         }
     }
 }
