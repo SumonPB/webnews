@@ -32,9 +32,19 @@ public class EmailService {
                 payment.getSubscriptionName());
 
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("tu-remitente@verificado.com"); // opcional: buen hábito
         message.setTo(toEmail);
         message.setSubject(subject);
         message.setText(body);
-        mailSender.send(message);
+
+        try {
+            mailSender.send(message);
+        } catch (org.springframework.mail.MailException ex) {
+            // Loguea el error y no interrumpas la ejecución
+            // usa el logger de tu preferencia; aquí un ejemplo con System.err:
+            System.err.println("No se pudo enviar el email a " + toEmail + ": " + ex.getMessage());
+            // Si usas SLF4J:
+            // logger.warn("No se pudo enviar email a {}: {}", toEmail, ex.getMessage());
+        }
     }
 }
