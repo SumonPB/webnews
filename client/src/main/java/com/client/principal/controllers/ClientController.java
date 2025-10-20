@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.client.principal.logic.ClientUC;
 import com.client.principal.logic.DAO.ClientDao;
+import com.client.principal.logic.DAO.NewsDao;
 import com.client.principal.logic.DAO.paymentDao;
 import com.client.principal.logic.Validations_Encriptations.Cesar;
 import com.client.principal.logic.Validations_Encriptations.EmailPaswordVal;
@@ -122,12 +123,12 @@ public class ClientController {
     }
 
     @GetMapping("/seeNewsNoLog")
-    public List<NewsEP> seeNewsNoLog() {
+    public List<NewsDao> seeNewsNoLog() {
         return clientUC.seeNews("");
     }
 
     @GetMapping("/seeNewsOnLog")
-    public List<NewsEP> seeNewsOnLog(@RequestParam("email") String email) {
+    public List<NewsDao> seeNewsOnLog(@RequestParam("email") String email) {
 
         return clientUC.seeNews(email);
     }

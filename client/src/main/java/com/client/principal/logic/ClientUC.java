@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import com.client.principal.data.entities.Client;
 import com.client.principal.data.repositorys.ClientRepository;
 import com.client.principal.logic.DAO.ClientDao;
+import com.client.principal.logic.DAO.NewsDao;
 import com.client.principal.logic.DAO.paymentDao;
 import com.client.principal.logic.DTO.ClientDTO;
+import com.client.principal.logic.DTO.NewsDTO;
 import com.client.principal.logic.DTO.PaymentDTO;
 import com.client.principal.logic.NETWORK.CreateBill;
 import com.client.principal.logic.NETWORK.EmailService;
@@ -228,13 +230,14 @@ public class ClientUC {
     }
 
     // ----------------------------------------------------------------------------------------------------------
-    public List<NewsEP> seeNews(String email) {
+    public List<NewsDao> seeNews(String email) {
         if (!email.isEmpty()) {
             ClientUI client = findClientByEmail(email);
             SubscriptionEP ns = getSubscription.findSubscriptionById(client.getSubscriptionID());
-            return viewNews.GetNewsByClient(ns.getName().toString(), client.getCategory());
+            return NewsDTO.toNewsDao(viewNews.GetNewsByClient(ns.getName().toString(), client.getCategory()),
+                    getSubscription);
         } else {
-            return viewNews.GetNewsByClient("FREE", null);
+            return NewsDTO.toNewsDao(viewNews.GetNewsByClient("FREE", null), getSubscription);
         }
 
     }
